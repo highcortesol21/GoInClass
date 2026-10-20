@@ -1,0 +1,2738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>GoInClass - The Learning Garage</title>
+  <base target="_top">
+  
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    /* DARK MODE DEFAULT VARS */
+    :root {
+      --bg-main: #0d121d;
+      --bg-card: #141a29;
+      --bg-card-hover: #1e293b;
+      --border-color: #232d42;
+      --border-accent: #27334d;
+      --text-main: #f8fafc;
+      --text-sub: #94a3b8;
+      --text-muted: #cbd5e1;
+      --grid-line: rgba(255, 255, 255, 0.03);
+    }
+
+    /* LIGHT MODE VARS */
+    body.light-mode {
+      --bg-main: #f1f5f9;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f8fafc;
+      --border-color: #cbd5e1;
+      --border-accent: #e2e8f0;
+      --text-main: #0f172a;
+      --text-sub: #475569;
+      --text-muted: #334155;
+      --grid-line: rgba(0, 0, 0, 0.04);
+    }
+
+    html, body { 
+      width: 100%;
+      max-width: 100vw;
+      overflow-x: hidden;
+      background-color: var(--bg-main); 
+      font-family: 'Nunito', sans-serif; 
+      color: var(--text-main); 
+      min-height: 100vh; 
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    h1, h2, h3, h4, .font-title { font-family: 'Fredoka', sans-serif; }
+    
+    .track-bg { 
+      background-image: 
+        linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+    
+    .container { 
+      width: 100%;
+      max-width: 1160px; 
+      margin: 0 auto; 
+      padding: 20px 16px; 
+    }
+
+    .grid > *, .flex > *, .card, div, section { min-width: 0; }
+
+    h1, h2, h3, h4, p, span, div, strong {
+      overflow-wrap: break-word;
+      word-break: break-word;
+    }
+
+    /* Light Mode Specific Overrides */
+    body.light-mode [style*="color: white"], 
+    body.light-mode [style*="color: #ffffff"], 
+    body.light-mode [style*="color:#ffffff"] { 
+      color: #0f172a !important; 
+    }
+    body.light-mode [style*="background: #0d121d"], 
+    body.light-mode [style*="background:#0d121d"], 
+    body.light-mode [style*="background: #131927"] { 
+      background: #f8fafc !important; 
+      border-color: #cbd5e1 !important; 
+    }
+    body.light-mode [style*="color: #94a3b8"], 
+    body.light-mode [style*="color:#94a3b8"] { 
+      color: #475569 !important; 
+    }
+    body.light-mode [style*="color: #cbd5e1"] { 
+      color: #334155 !important; 
+    }
+
+    /* Animations */
+    @keyframes floatCar {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-4px); }
+    }
+    @keyframes popIn {
+      0% { opacity: 0; transform: scale(0.96); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-5px); }
+      40%, 80% { transform: translateX(5px); }
+    }
+
+    /* Highlight Underline Style */
+    .text-highlight-yellow {
+      color: #d97706;
+      border-bottom: 4px solid #f59e0b;
+      padding-bottom: 2px;
+      display: inline-block;
+    }
+    body:not(.light-mode) .text-highlight-yellow {
+      color: #ffcc00;
+      border-bottom-color: #ffcc00;
+    }
+    
+    /* CEFR Capsule Tag */
+    .cefr-tag {
+      background: rgba(185, 28, 28, 0.15);
+      border: 1.5px solid #ef4444;
+      color: #dc2626;
+      padding: 4px 14px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-transform: uppercase;
+    }
+    body:not(.light-mode) .cefr-tag {
+      background: rgba(185, 28, 28, 0.25);
+      color: #fca5a5;
+    }
+
+    /* HEADER STYLES */
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+      width: 100%;
+    }
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .user-badge-box {
+      background: var(--bg-card);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-weight: bold;
+      font-size: 13px;
+      border: 1.5px solid var(--border-color);
+      color: var(--text-main);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    /* Cards High-Contrast */
+    .card { 
+      background: var(--bg-card); 
+      border-radius: 20px; 
+      padding: 20px; 
+      box-shadow: 0 8px 24px rgba(0,0,0,0.06); 
+      margin-bottom: 20px; 
+      border: 1px solid var(--border-color);
+      transition: all 0.2s ease;
+      width: 100%;
+    }
+    .card:hover { border-color: #3b82f6; }
+    
+    .card-blue { background: #f0f9ff; border: 1.5px solid #0284c7; }
+    .card-yellow { background: #fffbebfb; border: 1.5px solid #d97706; }
+    .card-mint { background: #f0fdf4; border: 1.5px solid #16a34a; }
+
+    body:not(.light-mode) .card-blue { background: #111a2e; border-color: #0284c7; }
+    body:not(.light-mode) .card-yellow { background: #1a160d; border-color: #d97706; }
+    body:not(.light-mode) .card-mint { background: #0c1c17; border-color: #16a34a; }
+
+    /* Telemetry Panel Box */
+    .telemetry-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-color);
+      border-radius: 20px;
+      padding: 20px;
+    }
+    .telemetry-stat-box {
+      background: var(--bg-main);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 14px;
+      text-align: center;
+    }
+
+    /* Winding Racetrack Grid */
+    .racetrack-wrapper {
+      position: relative;
+      background: var(--bg-main);
+      border-radius: 24px;
+      padding: 24px 18px;
+      border: 1.5px solid var(--border-color);
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+    .racetrack-svg {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .racetrack-cards-grid {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    /* Racetrack Stage Card Styling */
+    .track-card {
+      background: var(--bg-card);
+      border: 2px solid var(--border-color);
+      border-radius: 18px;
+      padding: 16px;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .track-card:hover:not(.locked) {
+      transform: translateY(-3px);
+      border-color: #3b82f6;
+    }
+    
+    .track-card.done {
+      border-color: #22c55e;
+      background: #f0fdf4;
+    }
+    body:not(.light-mode) .track-card.done { background: #0f1f1a; }
+
+    .track-card.done .stage-num-badge {
+      background: #22c55e;
+      color: #0d121d;
+      font-size: 20px;
+    }
+
+    .track-card.current {
+      border-color: #ff9500;
+      background: #fff7ed;
+      box-shadow: 0 0 0 1px #ff9500;
+    }
+    body:not(.light-mode) .track-card.current { background: #21180d; }
+
+    .track-card.current .stage-num-badge {
+      background: linear-gradient(135deg, #ff9500, #ff3b30);
+      color: white;
+    }
+
+    .track-card.locked {
+      background: var(--bg-main);
+      border-color: var(--border-color);
+      opacity: 0.65;
+    }
+    .track-card.locked .stage-num-badge {
+      background: var(--border-color);
+      color: var(--text-sub);
+    }
+
+    .track-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .category-tag {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      color: #d97706;
+      text-transform: uppercase;
+    }
+    body:not(.light-mode) .category-tag { color: #ffcc00; }
+
+    .xp-pill {
+      background: rgba(0, 0, 0, 0.05);
+      border: 1px solid var(--border-color);
+      padding: 2px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--text-sub);
+    }
+
+    .track-card-body {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .stage-num-badge {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .car-pin {
+      position: absolute;
+      top: -12px;
+      right: 18px;
+      background: #ff3b30;
+      color: white;
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      border: 2px solid #ffffff;
+      z-index: 10;
+      animation: floatCar 2s ease-in-out infinite;
+    }
+    
+    .robot-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: var(--bg-main);
+      border: 2px solid #00e5ff;
+      color: #0284c7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    body:not(.light-mode) .robot-avatar { color: #00e5ff; }
+    
+    /* Action Buttons */
+    .btn-primary {
+      background: linear-gradient(135deg, #ff9500 0%, #ff3b30 100%);
+      color: #ffffff; 
+      border-radius: 9999px; 
+      border: none; 
+      padding: 10px 22px;
+      font-weight: 900; 
+      font-size: 13px; 
+      letter-spacing: 0.5px;
+      cursor: pointer; 
+      transition: all 0.2s ease; 
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(255, 149, 0, 0.3);
+      white-space: nowrap;
+    }
+    body:not(.light-mode) .btn-primary { color: #0d121d; }
+
+    .btn-primary:hover:not(:disabled) { 
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 149, 0, 0.5);
+    }
+    .btn-primary:disabled { 
+      background: #94a3b8; color: #f1f5f9; cursor: not-allowed; opacity: 0.7; box-shadow: none;
+    }
+    
+    .btn-secondary {
+      background: var(--bg-card); 
+      border: 1.5px solid #d97706; 
+      color: #d97706; 
+      border-radius: 9999px; 
+      padding: 8px 18px;
+      font-weight: 800; 
+      font-size: 12px;
+      cursor: pointer; 
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+    body:not(.light-mode) .btn-secondary {
+      border-color: #ffcc00;
+      color: #ffcc00;
+    }
+
+    .btn-secondary:hover:not(:disabled) { 
+      background: rgba(255, 204, 0, 0.12);
+      transform: translateY(-2px);
+    }
+    .btn-secondary.correct { background: #22c55e; color: #ffffff; border-color: #22c55e; }
+    .btn-secondary.wrong { background: #ff3b30; color: white; border-color: #ff3b30; animation: shake 0.4s ease; }
+
+    .input-field {
+      width: 100%; padding: 12px 16px; border: 1.5px solid var(--border-color); border-radius: 14px; outline: none;
+      font-family: 'Nunito', sans-serif; font-size: 14px; margin-bottom: 12px; transition: all 0.2s ease;
+      background: var(--bg-main); color: var(--text-main);
+    }
+    .input-field:focus { border-color: #00e5ff; background: var(--bg-card); }
+    textarea.input-field { resize: vertical; min-height: 85px; }
+    
+    .hidden { display: none !important; }
+    .flex { display: flex; }
+    .items-center { align-items: center; }
+    .justify-between { justify-content: space-between; }
+    .gap-4 { gap: 16px; }
+    .gap-2 { gap: 8px; }
+    .grid { display: grid; gap: 20px; }
+    .text-center { text-align: center; }
+
+    /* AUTH SWITCH TABS */
+    .auth-tabs {
+      display: flex;
+      background: var(--bg-main);
+      padding: 4px;
+      border-radius: 14px;
+      margin-bottom: 18px;
+      border: 1px solid var(--border-color);
+    }
+    .auth-tab-btn {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      background: transparent;
+      color: var(--text-sub);
+      font-weight: 800;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 13px;
+    }
+    .auth-tab-btn.active {
+      background: #ff9500;
+      color: #0d121d;
+    }
+
+    .role-group { display: flex; gap: 8px; margin-bottom: 14px; }
+    .role-chip {
+      flex: 1;
+      padding: 10px 6px;
+      border: 1.5px solid var(--border-color);
+      border-radius: 12px;
+      background: var(--bg-main);
+      cursor: pointer;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--text-sub);
+      transition: all 0.2s ease;
+    }
+    .role-chip.active {
+      border-color: #ff9500;
+      background: rgba(255, 149, 0, 0.15);
+      color: #ff9500;
+    }
+
+    /* TAB CONTAINER */
+    .tab-container { 
+      display: flex; 
+      gap: 12px; 
+      border-bottom: 1.5px solid var(--border-color); 
+      margin-bottom: 20px; 
+      overflow-x: auto; 
+      white-space: nowrap; 
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none; 
+      padding-bottom: 6px;
+    }
+    .tab-container::-webkit-scrollbar { display: none; }
+
+    .tab-btn { 
+      flex-shrink: 0 !important;
+      white-space: nowrap !important;
+      padding: 8px 14px; 
+      font-weight: 800; 
+      cursor: pointer; 
+      color: var(--text-sub); 
+      border-bottom: 3px solid transparent; 
+      transition: all 0.2s ease; 
+      font-size: 13px; 
+    }
+    .tab-btn:hover { color: #d97706; }
+    .tab-btn.active { color: #d97706; border-bottom-color: #d97706; }
+    body:not(.light-mode) .tab-btn:hover { color: #ffcc00; }
+    body:not(.light-mode) .tab-btn.active { color: #ffcc00; border-bottom-color: #ffcc00; }
+
+    /* TABLE BASE STYLES */
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); }
+    th { color: var(--text-sub); background: var(--bg-main); font-weight: bold; font-size: 12px; }
+
+    .vocab-word {
+      color: #d97706; font-weight: bold; cursor: pointer; text-decoration: underline; text-decoration-style: dotted;
+      background: rgba(217, 119, 6, 0.15); padding: 2px 6px; border-radius: 6px; transition: all 0.2s ease;
+    }
+    body:not(.light-mode) .vocab-word { color: #ffcc00; background: rgba(255, 204, 0, 0.15); }
+    .vocab-word:hover { color: #0d121d; background: #ffcc00; }
+
+    .modal-overlay { position: fixed; inset: 0; background: rgba(8, 12, 20, 0.75); backdrop-filter: blur(4px); display: flex; justify-content: center; align-items: center; z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
+    .modal-overlay.show { opacity: 1; pointer-events: auto; }
+    .modal-box { background: var(--bg-card); border: 1.5px solid var(--border-color); padding: 24px; border-radius: 20px; text-align: center; max-width: 480px; width: 92%; transform: scale(0.96); transition: transform 0.2s ease; max-height: 90vh; overflow-y: auto; color: var(--text-main); }
+    .modal-overlay.show .modal-box { transform: scale(1); animation: popIn 0.2s ease forwards; }
+    
+    .match-col { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+    .match-btn { padding: 12px; border: 1.5px solid var(--border-color); border-radius: 14px; cursor: pointer; background: var(--bg-card); font-weight: bold; text-align: center; transition: all 0.2s ease; font-size: 13px; color: var(--text-muted); }
+    .match-btn:hover { border-color: #00e5ff; }
+    .match-btn.selected { border-color: #ff9500; background: rgba(255, 149, 0, 0.18); color: var(--text-main); }
+    .match-btn.matched { border-color: #22c55e; background: rgba(34, 197, 94, 0.18); color: #16a34a; cursor: default; opacity: 0.85; }
+
+    .file-upload-box { border: 2px dashed #ff9500; background: rgba(255, 149, 0, 0.08); padding: 20px; border-radius: 16px; text-align: center; cursor: pointer; margin-bottom: 16px; }
+
+    .class-sidebar-item { background: var(--bg-card); padding: 12px; border-radius: 14px; font-weight: bold; border: 1.5px solid var(--border-color); cursor: pointer; margin-bottom: 10px; color: var(--text-sub); }
+    .class-sidebar-item.active { border-color: #d97706; color: #d97706; background: rgba(217, 119, 6, 0.12); }
+    body:not(.light-mode) .class-sidebar-item.active { border-color: #ffcc00; color: #ffcc00; background: rgba(255, 204, 0, 0.12); }
+
+    .member-item { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border-radius: 14px; background: var(--bg-card); margin-bottom: 8px; border: 1.5px solid var(--border-color); }
+    
+    .chat-box { background: var(--bg-main); border-radius: 18px; height: 300px; overflow-y: auto; padding: 16px; margin-bottom: 14px; border: 1.5px solid var(--border-color); display: flex; flex-direction: column; gap: 10px; }
+    .chat-bubble { max-width: 80%; padding: 10px 14px; border-radius: 16px; font-size: 13px; line-height: 1.4; }
+    .chat-bubble.mine { align-self: flex-end; background: linear-gradient(135deg, #ff9500, #ff3b30); color: #ffffff; font-weight:700; border-bottom-right-radius: 2px; }
+    .chat-bubble.other { align-self: flex-start; background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color); border-bottom-left-radius: 2px; }
+
+    /* MOBILE RESPONSIVE FIXES */
+    @media (max-width: 768px) {
+      .container { padding: 12px 10px; }
+      .header-bar { flex-direction: column; align-items: stretch; gap: 12px; }
+      .header-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; width: 100%; }
+      .user-badge-box { width: 100%; justify-content: center; font-size: 12px; padding: 6px 12px; }
+      #view-teacher { grid-template-columns: 1fr !important; gap: 14px; width: 100%; }
+      .card { padding: 16px !important; border-radius: 16px; }
+      .responsive-flex-card { flex-direction: column !important; align-items: stretch !important; gap: 12px !important; }
+      .responsive-flex-card .btn-primary, .responsive-flex-card .btn-secondary { width: 100% !important; justify-content: center !important; }
+      .teacher-header-bar { flex-direction: column !important; align-items: stretch !important; gap: 12px !important; }
+      .teacher-header-bar button { width: 100% !important; justify-content: center !important; }
+      #tc-current-title { font-size: 18px !important; line-height: 1.3; }
+      .racetrack-cards-grid { grid-template-columns: 1fr !important; }
+      .racetrack-svg { display: none; }
+      .grid, #view-student .grid, .telemetry-grid { grid-template-columns: 1fr !important; gap: 14px; }
+      #tc-students table { width: 100% !important; min-width: 0 !important; display: block !important; }
+      #tc-students thead { display: none !important; }
+      #tc-students tbody { display: flex !important; flex-direction: column !important; gap: 10px !important; }
+      #tc-students tbody tr { display: flex !important; flex-direction: column !important; gap: 8px !important; background: var(--bg-main) !important; border: 1.5px solid var(--border-color) !important; border-radius: 14px !important; padding: 12px 14px !important; }
+      #tc-students tbody td { display: flex !important; justify-content: space-between !important; align-items: center !important; padding: 2px 0 !important; border-bottom: none !important; width: 100% !important; }
+      #tc-students tbody td:first-child { border-bottom: 1px dashed var(--border-color) !important; padding-bottom: 8px !important; margin-bottom: 2px !important; }
+    }
+  </style>
+</head>
+<body class="track-bg">
+
+<div class="container">
+  <!-- HEADER -->
+  <header id="main-header" class="hidden header-bar">
+    <div class="flex items-center gap-3 cursor-pointer" onclick="goDashboard()">
+      <div style="background: linear-gradient(135deg, #ff9500, #ff3b30); width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center; color:#0d121d; font-size:18px; flex-shrink:0;">
+        <i class="fa-solid fa-gauge-high"></i>
+      </div>
+      <div>
+        <h1 class="font-title" style="font-size: 22px; line-height: 1;">GoInClass</h1>
+        <span style="font-size: 10px; color: #ffcc00; font-weight: 800;">CEFR ENGLISH GARAGE</span>
+      </div>
+    </div>
+
+    <div class="header-controls">
+      <div id="user-badge" class="user-badge-box"></div>
+      
+      <button class="btn-secondary btn-theme-toggle" style="padding: 6px 12px; font-size: 13px;" onclick="toggleTheme()" title="Switch Light/Dark Mode">
+        <i id="theme-icon" class="fa-solid fa-sun"></i>
+      </button>
+
+      <button class="btn-secondary btn-reset-header" style="border-color: #ef4444; color: #ef4444; font-size: 11px; padding: 6px 12px;" onclick="resetAllProgress()">
+        <i class="fa-solid fa-rotate-right"></i> รีเซ็ตเป็น 0%
+      </button>
+      <button class="btn-primary btn-logout-header" style="padding: 6px 16px; font-size: 12px;" onclick="logout()">Logout</button>
+    </div>
+  </header>
+
+  <!-- VIEW: AUTH (LOGIN & SIGN UP) -->
+  <div id="view-auth" style="min-height: 80vh; display: flex; justify-content: center; align-items: center;">
+    <div class="card" style="max-width: 420px; text-align: center; padding: 32px 20px;">
+      <div style="background: linear-gradient(135deg, #ff9500, #ff3b30); width: 60px; height: 60px; border-radius: 18px; margin: 0 auto 12px auto; display: flex; align-items: center; justify-content: center; font-size: 28px; color: #0d121d;">
+        <i class="fa-solid fa-robot"></i>
+      </div>
+      <h1 class="font-title" style="font-size: 28px; margin-bottom: 2px;">GoInClass</h1>
+      <p style="color: var(--text-sub); margin-bottom: 20px; font-size: 13px;">CEFR English Garage Platform</p>
+
+      <!-- TAB SWITCH -->
+      <div class="auth-tabs">
+        <button id="tab-btn-login" class="auth-tab-btn active" onclick="switchAuthTab('login')">เข้าสู่ระบบ (Login)</button>
+        <button id="tab-btn-signup" class="auth-tab-btn" onclick="switchAuthTab('signup')">สมัครสมาชิก (Sign Up)</button>
+      </div>
+
+      <!-- FORM: LOGIN -->
+      <div id="form-login">
+        <input id="l-email" type="text" placeholder="Email หรือ Student ID" class="input-field" value="">
+        <input id="l-pass" type="password" placeholder="Password" class="input-field" value="">
+        <button id="btn-login-submit" class="btn-primary" style="width: 100%; padding: 12px;" onclick="doLogin()">
+          <i class="fa-solid fa-key"></i> START ENGINE (LOGIN)
+        </button>
+      </div>
+
+      <!-- FORM: SIGN UP -->
+      <div id="form-signup" class="hidden">
+        <div class="role-group">
+          <div class="role-chip active" id="chip-student" onclick="setSignUpRole('student')"><i class="fa-solid fa-graduation-cap"></i> Student</div>
+          <div class="role-chip" id="chip-teacher" onclick="setSignUpRole('teacher')"><i class="fa-solid fa-chalkboard-user"></i> Teacher</div>
+          <div class="role-chip" id="chip-parent" onclick="setSignUpRole('parent')"><i class="fa-solid fa-users"></i> Parent</div>
+        </div>
+
+        <input id="s-name" type="text" placeholder="ชื่อ - นามสกุล" class="input-field">
+        <input id="s-email" type="email" placeholder="Email Address" class="input-field">
+        <input id="s-pass" type="password" placeholder="Password" class="input-field">
+        
+        <div id="s-stu-id-container">
+          <input id="s-stuid" type="text" placeholder="Student ID (เช่น STU-101)" class="input-field">
+        </div>
+
+        <button id="btn-signup-submit" class="btn-primary" style="width: 100%; padding: 12px;" onclick="doSignUp()">
+          <i class="fa-solid fa-user-plus"></i> CREATE ACCOUNT (SIGN UP)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIEW: TEACHER -->
+  <div id="view-teacher" class="hidden grid" style="grid-template-columns: 260px 1fr;">
+    <div class="card card-blue" style="height: fit-content; padding: 18px;">
+      <h3 class="font-title" style="font-size: 17px; margin-bottom: 12px; color: #0284c7;"><i class="fa-solid fa-chalkboard"></i> My Classrooms</h3>
+      <div id="teacher-class-list"></div>
+      <button class="btn-secondary" style="width: 100%; margin-top: 10px; font-size: 12px;" onclick="openCreateClassModal()"><i class="fa-solid fa-plus"></i> Create Classroom</button>
+    </div>
+    
+    <div class="card" style="padding: 20px;">
+      <div class="teacher-header-bar flex justify-between items-center" style="margin-bottom: 16px;">
+        <div>
+          <h2 id="tc-current-title" class="font-title" style="font-size: 22px;">Form and Usage 3 (ม.5/3)</h2>
+          <p style="color: #94a3b8; font-size: 12px; margin-top: 2px;">Class Code: <span id="tc-current-code" style="background: rgba(255, 204, 0, 0.15); border: 1px solid #ffcc00; padding: 2px 8px; border-radius: 6px; font-weight: bold; color: #d97706;">FRM-53X</span></p>
+        </div>
+        <button class="btn-secondary" onclick="openAddStudentModal()"><i class="fa-solid fa-user-plus"></i> Add Student</button>
+      </div>
+
+      <div class="tab-container">
+        <div class="tab-btn active" id="tab-l" onclick="switchTeacherTab('lessons')"><i class="fa-solid fa-book"></i> Lessons</div>
+        <div class="tab-btn" id="tab-s" onclick="switchTeacherTab('students')"><i class="fa-solid fa-users"></i> Students & Attendance</div>
+        <div class="tab-btn" id="tab-a" onclick="switchTeacherTab('assignments')"><i class="fa-solid fa-tasks"></i> Assignments</div>
+      </div>
+
+      <div id="tc-lessons">
+        <div class="teacher-header-bar flex justify-between items-center" style="margin-bottom: 14px;">
+          <h3 style="font-weight: bold; font-size: 14px;">Created Lessons (6 Stages Interactive)</h3>
+          <button class="btn-primary" style="padding: 6px 14px; font-size: 12px;" onclick="openCreateLessonModal()"><i class="fa-solid fa-plus"></i> New Lesson Track</button>
+        </div>
+        <div id="teacher-lesson-list" style="display: flex; flex-direction: column; gap: 12px;"></div>
+      </div>
+
+      <div id="tc-students" class="hidden">
+        <table>
+          <thead>
+            <tr><th>Student</th><th>Student ID</th><th>Attendance Status (>=60%)</th><th>Action</th></tr>
+          </thead>
+          <tbody id="teacher-student-table-body"></tbody>
+        </table>
+      </div>
+
+      <div id="tc-assignments" class="hidden">
+        <div style="background: #0d121d; padding: 16px; border-radius: 16px; margin-bottom: 16px; border: 1.5px solid #27334d;">
+          <h4 class="font-title" style="margin-bottom: 10px;"><i class="fa-solid fa-plus-circle" style="color: #ff9500;"></i> Create New Assignment</h4>
+          <input id="new-assign-title" type="text" class="input-field" placeholder="Assignment Title">
+          <textarea id="new-assign-desc" class="input-field" placeholder="Assignment Details..."></textarea>
+          <div class="teacher-header-bar flex gap-3" style="margin-top: 4px;">
+            <input id="new-assign-date" type="text" class="input-field" placeholder="Due Date (e.g., 2026-10-28)" style="margin-bottom: 0;">
+            <button class="btn-primary" style="height: fit-content;" onclick="createAssignment()">Assign Task</button>
+          </div>
+        </div>
+        <div id="teacher-assignment-list" style="display: flex; flex-direction: column; gap: 10px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIEW: STUDENT DASHBOARD -->
+  <div id="view-student" class="hidden">
+    <div class="telemetry-grid grid" style="grid-template-columns: 1.2fr 1fr; align-items: start; margin-bottom: 20px;">
+      
+      <div style="padding-right: 8px;">
+        <div style="margin-bottom: 10px;">
+          <span class="cefr-tag"><i class="fa-solid fa-sparkles" style="color:#d97706;"></i> CEFR ENGLISH GARAGE • LEVEL A2 PIT</span>
+        </div>
+        
+        <h1 class="font-title" style="font-size: 34px; line-height: 1.15; margin-bottom: 10px;">
+          Welcome, <span class="text-highlight-yellow"><span id="stu-name-hero">Student</span>! 🏎️</span>
+        </h1>
+
+        <p style="color: #64748b; font-size: 14px; line-height: 1.6; margin-bottom: 20px;">
+          Your engine is warmed up! Tune up your English grammar mechanics, race through vocabulary laps, and level up your CEFR speaking score today.
+        </p>
+
+        <div class="flex gap-3" style="flex-wrap: wrap;">
+          <button class="btn-primary" onclick="openActiveRaceDirect()"><i class="fa-solid fa-play"></i> START PIT STOP RACE</button>
+          <button class="btn-secondary" onclick="customAlert('Nitro Boost Test Mode Active!', 'Nitro Boost ⚡', 'fa-solid fa-bolt')"><i class="fa-solid fa-bolt"></i> TEST NITRO BOOST</button>
+        </div>
+      </div>
+
+      <div class="telemetry-card">
+        <div class="flex justify-between items-center" style="margin-bottom: 14px;">
+          <div class="flex items-center gap-2" style="font-weight: 800; font-size: 13px; letter-spacing: 0.5px;">
+            <i class="fa-solid fa-gauge" style="color:#d97706; font-size: 15px;"></i> GARAGE TELEMETRY
+          </div>
+          <span style="background: rgba(34, 197, 94, 0.15); border: 1px solid #22c55e; color: #16a34a; padding: 2px 8px; border-radius: 6px; font-size: 10px; font-weight: 800;">ONLINE</span>
+        </div>
+
+        <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px;">
+          <div class="telemetry-stat-box">
+            <span style="font-size: 11px; color: #64748b; font-weight: 700; display: block; margin-bottom: 2px;">Track Progress</span>
+            <span id="tel-stat-1-val" class="font-title" style="font-size: 20px; color: #d97706;">0 / 6 Stages</span>
+          </div>
+          <div class="telemetry-stat-box">
+            <span style="font-size: 11px; color: #64748b; font-weight: 700; display: block; margin-bottom: 2px;">Attendance Rate</span>
+            <span id="tel-stat-2-val" class="font-title" style="font-size: 20px; color: #0284c7;">0% Attendance</span>
+          </div>
+        </div>
+
+        <div style="background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 12px; padding: 10px 14px;" class="flex justify-between items-center">
+          <div class="flex items-center gap-3">
+            <div style="font-size: 18px; color: #ff3b30;"><i class="fa-solid fa-bullseye"></i></div>
+            <div>
+              <strong id="tel-quest-title" style="font-size: 12px; display: block;">Next Target: Stage 1</strong>
+              <span id="tel-quest-sub" style="font-size: 10px; color: #64748b;">Complete Stage to increase Attendance %</span>
+            </div>
+          </div>
+          <span id="tel-quest-xp" style="background: #ff9500; color: #ffffff; font-weight: 900; font-size: 11px; padding: 4px 8px; border-radius: 6px;">+50 XP</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="grid" style="grid-template-columns: 2fr 1fr;">
+      <div>
+        <h3 class="font-title" style="font-size: 17px; margin-bottom: 10px;"><i class="fa-solid fa-flag-checkered" style="color:#d97706;"></i> My Tracks (Classrooms)</h3>
+        <div id="student-classroom-list" style="display: flex; flex-direction: column; gap: 12px;"></div>
+      </div>
+
+      <div>
+        <div class="card" style="padding: 16px;">
+          <h3 class="font-title" style="font-size: 15px; margin-bottom: 10px;"><i class="fa-solid fa-clock" style="color: #ff3b30;"></i> Upcoming Assignments</h3>
+          <div id="student-assignment-list" style="display: flex; flex-direction: column; gap: 8px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIEW: STUDENT HUB -->
+  <div id="view-student-hub" class="hidden" style="max-width: 980px; margin: 0 auto;">
+    <button class="btn-secondary" style="margin-bottom: 14px;" onclick="switchView('student')"><i class="fa-solid fa-arrow-left"></i> Back to My Tracks</button>
+    <div class="card" style="padding: 20px;">
+      <div style="background: var(--bg-main); border: 1.5px solid var(--border-color); padding: 16px; border-radius: 14px; margin-bottom: 18px;">
+        <span class="cefr-tag" style="margin-bottom:4px;">Classroom Track</span>
+        <h2 id="hub-class-title" class="font-title" style="font-size: 22px; margin-top: 4px;">Form and Usage 3 (ชั้นมัธยมศึกษาปีที่ 5/3)</h2>
+        <p style="opacity: 0.85; font-size: 12px; margin-top:2px;">Class Code: <strong id="hub-class-code" style="color:#d97706;">FRM-53X</strong></p>
+      </div>
+
+      <!-- TAB CONTAINER -->
+      <div class="tab-container">
+        <div class="tab-btn active" id="stub-tab-lessons" onclick="switchStudentHubTab('lessons')"><i class="fa-solid fa-book-open"></i> Lessons & Races</div>
+        <div class="tab-btn" id="stub-tab-assignments" onclick="switchStudentHubTab('assignments')"><i class="fa-solid fa-tasks"></i> Assignments</div>
+        <div class="tab-btn" id="stub-tab-meeting" onclick="switchStudentHubTab('meeting')"><i class="fa-solid fa-comments"></i> Meeting Space</div>
+        <div class="tab-btn" id="stub-tab-people" onclick="switchStudentHubTab('people')"><i class="fa-solid fa-users"></i> Classmates</div>
+      </div>
+
+      <div id="hub-tc-lessons">
+        <div style="background: rgba(34, 197, 94, 0.1); border: 1.5px solid #22c55e; border-radius: 12px; padding: 12px 16px; margin-bottom: 18px;" class="responsive-flex-card flex justify-between items-center">
+          <div>
+            <h4 style="color: #16a34a; font-weight: bold; font-size: 13px;">Attendance Progress Bar</h4>
+            <p style="font-size: 11px; color: #15803d; margin-top: 2px;">เรียนสะสม Stage ต่างๆ ให้ได้ 60% ขึ้นไป ระบบจะทำการเช็คชื่อให้อัตโนมัติ</p>
+          </div>
+          <div style="text-align: right;">
+            <div id="hub-attendance-badge" style="font-size: 20px; font-weight: bold; color: #16a34a;">0%</div>
+            <span id="hub-attendance-status" style="font-size: 10px; font-weight: bold; color: #64748b;">ยังไม่ถึงเกณฑ์</span>
+          </div>
+        </div>
+        <div id="student-hub-lesson-list" style="display: flex; flex-direction: column; gap: 12px;"></div>
+      </div>
+
+      <div id="hub-tc-assignments" class="hidden">
+        <div id="student-hub-assignment-list" style="display: flex; flex-direction: column; gap: 12px;"></div>
+      </div>
+
+      <div id="hub-tc-meeting" class="hidden">
+        <div class="flex justify-between items-center" style="margin-bottom: 14px;">
+          <div>
+            <h3 class="font-title" style="font-size: 17px;">Meeting Space / Discussion Rooms</h3>
+            <p style="font-size: 11px; color: #64748b;">สร้างห้องคุยงาน พิมพ์ข้อความ แนบไฟล์งาน และแชร์ลิงก์ได้</p>
+          </div>
+          <button class="btn-primary" style="padding: 6px 14px; font-size: 11px;" onclick="openCreateMeetingRoomModal()"><i class="fa-solid fa-plus"></i> Create Room</button>
+        </div>
+        <div id="student-meeting-room-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px;"></div>
+      </div>
+
+      <div id="hub-tc-people" class="hidden">
+        <h4 class="font-title" style="font-size: 15px; color: #d97706; margin-bottom: 8px;"><i class="fa-solid fa-chalkboard-user"></i> Teacher</h4>
+        <div class="member-item" style="border: 1.5px solid #d97706; background: rgba(217, 119, 6, 0.08);">
+          <div style="font-size: 16px; color: #d97706; background: rgba(217, 119, 6, 0.15); width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><i class="fa-solid fa-chalkboard-user"></i></div>
+          <div>
+            <div id="hub-teacher-name" style="font-weight: bold; font-size: 13px;">ครูสมศรี ใจดี (Kru Somsri)</div>
+            <div id="hub-teacher-contact" style="font-size: 11px; color: #64748b;">Line: @krusomsri | Tel: 081-234-5678</div>
+          </div>
+        </div>
+
+        <h4 class="font-title" style="font-size: 15px; color: #64748b; margin: 16px 0 8px 0;"><i class="fa-solid fa-user-group"></i> Classmates</h4>
+        <div id="hub-classmate-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIEW: LESSON (RACETRACK MAP UI) -->
+  <div id="view-lesson" class="hidden" style="max-width: 980px; margin: 0 auto;">
+    <button class="btn-secondary" style="margin-bottom: 14px;" onclick="switchView('student-hub')"><i class="fa-solid fa-arrow-left"></i> Back to Classroom Hub</button>
+    
+    <div class="card" style="padding: 20px;">
+      <h2 id="current-active-lesson-title" class="font-title" style="font-size: 22px; margin-bottom: 2px;">Prefix & Suffix</h2>
+      <p id="current-active-lesson-sub" style="color: #64748b; font-size: 12px; margin-bottom: 16px;">Form and Usage 3 (ม.5/3)</p>
+      
+      <!-- RACETRACK MAP WITH SVG -->
+      <div class="racetrack-wrapper">
+        <svg class="racetrack-svg" viewBox="0 0 900 240" preserveAspectRatio="none">
+          <path d="M 140 60 L 760 60 C 850 60, 850 180, 760 180 L 140 180 C 50 180, 50 60, 140 60" 
+                fill="none" stroke="#cbd5e1" stroke-width="40" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M 140 60 L 760 60 C 850 60, 850 180, 760 180 L 140 180 C 50 180, 50 60, 140 60" 
+                fill="none" stroke="#94a3b8" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M 140 60 L 760 60 C 850 60, 850 180, 760 180 L 140 180 C 50 180, 50 60, 140 60" 
+                fill="none" stroke="#d97706" stroke-width="3.5" stroke-dasharray="12 10" stroke-linecap="round"/>
+        </svg>
+
+        <div id="racetrack-cards-grid" class="racetrack-cards-grid"></div>
+      </div>
+
+      <!-- ACTIVE STAGE INTERACTIVE PANEL -->
+      <div style="background: var(--bg-main); padding: 20px; border-radius: 18px; min-height: 320px; border: 1.5px solid var(--border-color);">
+        
+        <!-- STAGE 1: VIDEO -->
+        <div id="stage-0">
+          <h3 class="font-title text-center" style="font-size: 18px; margin-bottom: 4px; color: #d97706;"><i class="fa-solid fa-play-circle"></i> Stage 1: Video Warmup</h3>
+          <p class="text-center" style="color: #64748b; margin-bottom: 12px; font-size: 12px;">ชมวิดีโอจนจบเพื่อนับสถิติเวลาสะสม และปลดล็อกไป Stage 2</p>
+          <div style="max-width: 600px; margin: 0 auto;">
+            <iframe id="lesson-video-frame" src="https://drive.google.com/file/d/1Aua7V_GtRPUOLcllRZEf5cyFDa8XCVYd/preview" width="100%" height="250" style="border-radius: 12px; border: none; margin-bottom: 12px; background: black;" allow="autoplay"></iframe>
+            <div class="text-center">
+              <button id="btn-video-done" class="btn-primary" disabled onclick="passStage(0)">กำลังรับชมวิดีโอ... (15 วินาที)</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STAGE 2: READING -->
+        <div id="stage-1" class="hidden">
+          <h3 class="font-title text-center" style="font-size: 18px; margin-bottom: 4px;"><i class="fa-solid fa-book-open"></i> Stage 2: Reading Passage</h3>
+          <p class="text-center" style="color: #64748b; margin-bottom: 12px; font-size: 12px;">อ่านบทความและกดคำศัพท์ไฮไลท์เพื่อเรียนรู้ความหมายและโครงสร้าง Prefix / Suffix (B2/C1)</p>
+          <div id="lesson-reading-content" style="background: var(--bg-card); padding: 16px; border-radius: 12px; font-size: 13px; line-height: 1.8; height: 260px; overflow-y: auto; margin-bottom: 14px; border: 1.5px solid var(--border-color);"></div>
+          <div class="text-center"><button class="btn-primary" onclick="passStage(1)"><i class="fa-solid fa-circle-check"></i> I've Finished Reading</button></div>
+        </div>
+
+        <!-- STAGE 3: MCQ QUIZ -->
+        <div id="stage-2" class="hidden text-center">
+          <h3 class="font-title" style="font-size: 18px; color: #d97706; margin-bottom: 4px;">Stage 3: Multiple Choice Quiz Pit</h3>
+          <span id="mcq-step-tag" style="background: rgba(217, 119, 6, 0.15); color: #d97706; border: 1px solid #d97706; padding: 2px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; margin-bottom: 10px; display: inline-block;">Question 1/5</span>
+          <div style="background: var(--bg-card); padding: 16px; border-radius: 14px; max-width: 580px; margin: 8px auto 0 auto; border: 1.5px solid var(--border-color);">
+            <p id="mcq-question" style="font-size: 14px; font-weight: bold; margin-bottom: 12px; line-height: 1.5;"></p>
+            <div id="mcq-options" style="display: flex; flex-direction: column; gap: 8px;"></div>
+          </div>
+        </div>
+
+        <!-- STAGE 4: MATCHING GAME -->
+        <div id="stage-3" class="hidden">
+          <h3 class="font-title text-center" style="font-size: 18px; color: #d97706; margin-bottom: 4px;">Stage 4: Pit Stop Match</h3>
+          <p class="text-center" style="color: #64748b; margin-bottom: 12px; font-size: 11px;">จับคู่ Prefix / Suffix กับความหมายภาษาไทยให้ถูกต้องครบทั้ง 8 คู่</p>
+          <div class="flex gap-3" style="max-width: 680px; margin: 0 auto;">
+            <div class="match-col" id="match-words"></div>
+            <div class="match-col" id="match-meanings"></div>
+          </div>
+        </div>
+
+        <!-- STAGE 5: FILL IN THE BLANK -->
+        <div id="stage-4" class="hidden text-center">
+          <h3 class="font-title" style="font-size: 18px; color: #d97706; margin-bottom: 4px;">Stage 5: Mechanic Fix</h3>
+          <span id="fill-step-tag" style="background: rgba(34, 197, 94, 0.15); color: #16a34a; border: 1px solid #22c55e; padding: 2px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; margin-bottom: 10px; display: inline-block;">Task 1/8</span>
+          <div style="background: var(--bg-card); padding: 18px 14px; border-radius: 14px; font-size: 14px; max-width: 600px; margin: 8px auto 0 auto; border: 1.5px solid var(--border-color);">
+            <p id="fill-sentence" style="margin-bottom: 14px; font-weight: bold; line-height: 1.5;"></p>
+            <div id="fill-options" style="display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;"></div>
+          </div>
+        </div>
+
+        <!-- STAGE 6: WORD BUILDER -->
+        <div id="stage-5" class="hidden text-center">
+          <h3 class="font-title" style="font-size: 18px; color: #d97706; margin-bottom: 4px;">Stage 6: Final Lap Word Builder</h3>
+          <span id="builder-step-tag" style="background: rgba(255, 59, 48, 0.15); color: #ff3b30; border: 1px solid #ff3b30; padding: 2px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; margin-bottom: 10px; display: inline-block;">Round 1/4</span>
+          <p id="builder-prompt" style="font-size: 13px; margin-bottom: 10px; font-weight: bold;"></p>
+          <div style="background: var(--bg-card); padding: 16px; border-radius: 14px; border: 1.5px dashed #ff9500; max-width: 580px; margin: 0 auto;">
+            <div id="build-area" style="min-height: 44px; background: var(--bg-main); border-radius: 10px; margin-bottom: 12px; display: flex; justify-content: center; align-items: center; gap: 6px; font-size: 17px; font-weight: bold; border: 1.5px solid #d97706; color: #d97706; padding: 0 10px;"></div>
+            <div style="display: flex; justify-content: center; gap: 6px; flex-wrap: wrap;" id="builder-parts"></div>
+            <div style="margin-top: 14px; display: flex; justify-content: center; gap: 8px;">
+              <button class="btn-primary" onclick="checkBuilder()"><i class="fa-solid fa-wand-magic-sparkles"></i> Check Word!</button>
+              <button class="btn-secondary" onclick="resetBuilder()"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- VIEW: PARENT -->
+  <div id="view-parent" class="hidden" style="max-width: 600px; margin: 10px auto 0 auto;">
+    <div id="parent-unlinked" class="card text-center" style="padding: 24px 16px;">
+      <div style="background: linear-gradient(135deg, #ff9500, #ff3b30); width: 52px; height: 52px; border-radius: 14px; font-size: 22px; color: #ffffff; display:flex; align-items:center; justify-content:center; margin: 0 auto 12px auto;">
+        <i class="fa-solid fa-people-roof"></i>
+      </div>
+      <h2 class="font-title" style="font-size: 20px; margin-bottom: 6px;">Track Your Child's Progress</h2>
+      <p style="color: #64748b; margin-bottom: 14px; font-size: 12px;">กรอก Student ID ของนักเรียนเพื่อติดตามผลการเรียนและการเข้าเรียน</p>
+      <input id="parent-student-id" type="text" placeholder="e.g. STU-101" class="input-field text-center" value="" style="max-width: 280px; margin: 0 auto 14px auto; display: block;">
+      <button class="btn-primary" style="width: 100%; max-width: 280px;" onclick="linkParent()"><i class="fa-solid fa-link"></i> Link Account</button>
+    </div>
+
+    <div id="parent-linked" class="hidden">
+      <div class="card flex items-center justify-between" style="padding: 14px; margin-bottom: 12px;">
+        <div class="flex items-center gap-3">
+          <div class="robot-avatar" style="width: 40px; height: 40px; font-size: 18px;">
+            <i class="fa-solid fa-robot"></i>
+          </div>
+          <div>
+            <h2 id="p-child-name" class="font-title" style="font-size: 18px;">-</h2>
+            <p style="color: #64748b; font-size: 11px;">Student ID: <strong id="linked-stu-id" style="color:#d97706;">-</strong></p>
+          </div>
+        </div>
+        <button class="btn-secondary" style="font-size: 11px; padding: 4px 10px;" onclick="unlinkParent()"><i class="fa-solid fa-arrows-rotate"></i> Switch</button>
+      </div>
+
+      <div class="grid" style="grid-template-columns: 1fr 1fr; margin-bottom: 12px;">
+        <div class="card card-mint text-center" style="padding: 14px; margin-bottom: 0;">
+          <h4 style="color: #16a34a; font-weight: bold; margin-bottom: 4px; font-size: 12px;"><i class="fa-solid fa-user-check"></i> % การเข้าเรียน</h4>
+          <div id="p-child-att-pct" class="font-title" style="font-size: 28px; color: #16a34a;">0%</div>
+          <span id="p-child-att-badge" style="background: rgba(74, 222, 128, 0.15); border: 1px solid #4ade80; padding: 2px 8px; border-radius: 6px; font-size: 10px; font-weight: bold; color: #16a34a;">ยังไม่ถึงเกณฑ์ (60%)</span>
+        </div>
+        <div class="card card-yellow text-center" style="padding: 14px; margin-bottom: 0;">
+          <h4 style="color: #d97706; font-weight: bold; margin-bottom: 4px; font-size: 12px;"><i class="fa-solid fa-tasks"></i> งานค้างส่ง</h4>
+          <div class="font-title" style="font-size: 28px; color: #d97706;" id="parent-assign-count">0</div>
+          <span style="font-size: 10px; color: #d97706; font-weight: bold;">รายการ</span>
+        </div>
+      </div>
+      
+      <div class="card card-blue" style="padding: 14px; margin-bottom: 12px;">
+        <h3 class="font-title" style="font-size: 15px; color: #0284c7; margin-bottom: 8px;"><i class="fa-solid fa-envelope-open-text"></i> ข้อความจากครูผู้สอน</h3>
+        <div id="parent-inbox-list" style="display: flex; flex-direction: column; gap: 8px;"></div>
+      </div>
+
+      <div class="card" style="padding: 14px;">
+        <h3 class="font-title" style="font-size: 15px; margin-bottom: 8px;"><i class="fa-solid fa-address-book" style="color: #ff9500;"></i> ช่องทางติดต่อครูที่ปรึกษา</h3>
+        <div class="member-item" style="background: rgba(217, 119, 6, 0.08); border: 1.5px solid rgba(217, 119, 6, 0.25);">
+          <div style="font-size: 16px; color: #d97706; background: rgba(217, 119, 6, 0.15); width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><i class="fa-solid fa-chalkboard-user"></i></div>
+          <div>
+            <div id="p-teacher-name" style="font-weight: bold; font-size: 13px;">ครูสมศรี ใจดี (Kru Somsri)</div>
+            <div id="p-teacher-contact" style="font-size: 11px; color: #64748b; margin-top: 1px;">Line: @krusomsri | Tel: 081-234-5678</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODALS -->
+<div id="modal-custom-alert" class="modal-overlay">
+  <div class="modal-box text-center" style="max-width: 380px; padding: 20px 16px;">
+    <div id="custom-alert-icon" style="font-size: 22px; color: #d97706; background: rgba(217, 119, 6, 0.15); width: 48px; height: 48px; border-radius: 999px; margin: 0 auto 10px auto; display: flex; align-items: center; justify-content: center; border: 1.5px solid #d97706;">
+      <i class="fa-solid fa-shield-halved"></i>
+    </div>
+    <h3 id="custom-alert-title" class="font-title" style="font-size: 18px; color: #d97706; margin-bottom: 4px;">แจ้งเตือน</h3>
+    <p id="custom-alert-msg" style="color: var(--text-sub); font-size: 13px; margin-bottom: 16px; line-height: 1.5; font-weight: 600;"></p>
+    <button class="btn-primary" style="width: 100%; font-size: 13px;" onclick="closeModal('modal-custom-alert')">ตกลง / เข้าใจแล้ว</button>
+  </div>
+</div>
+
+<div id="modal-create-classroom" class="modal-overlay">
+  <div class="modal-box text-left">
+    <div class="flex justify-between items-center" style="margin-bottom: 12px;">
+      <h3 class="font-title" style="font-size: 17px; color: #d97706;"><i class="fa-solid fa-chalkboard"></i> Create New Classroom</h3>
+      <button class="btn-secondary" style="padding:2px 8px;" onclick="closeModal('modal-create-classroom')">X</button>
+    </div>
+    <label style="font-weight: bold; font-size: 12px;">ชื่อรายวิชา / Subject Name:</label>
+    <input id="m-class-title" type="text" class="input-field" placeholder="Form and Usage 3">
+    <label style="font-weight: bold; font-size: 12px;">ชั้นเรียน / Grade:</label>
+    <input id="m-class-grade" type="text" class="input-field" placeholder="ชั้นมัธยมศึกษาปีที่ 5/3">
+    <label style="font-weight: bold; font-size: 12px;">เพิ่มนักเรียนเริ่มต้น (Email หรือ Student ID คั่นด้วยจุลภาค ,):</label>
+    <textarea id="m-class-students" class="input-field" placeholder="student1@school.com, STU-102"></textarea>
+    <button class="btn-primary" style="width: 100%; margin-top: 4px;" onclick="submitCreateClassroom()">Create Classroom</button>
+  </div>
+</div>
+
+<div id="modal-add-student" class="modal-overlay">
+  <div class="modal-box text-left">
+    <div class="flex justify-between items-center" style="margin-bottom: 12px;">
+      <h3 class="font-title" style="font-size: 17px; color: #0284c7;"><i class="fa-solid fa-user-plus"></i> Add Student to Class</h3>
+      <button class="btn-secondary" style="padding:2px 8px;" onclick="closeModal('modal-add-student')">X</button>
+    </div>
+    <label style="font-weight: bold; font-size: 12px;">Student ID or Email:</label>
+    <input id="m-add-stu-input" type="text" class="input-field" placeholder="STU-105 or newstudent@school.com">
+    <button class="btn-primary" style="width: 100%;" onclick="submitAddStudent()">Add Student</button>
+  </div>
+</div>
+
+<div id="modal-create-lesson" class="modal-overlay">
+  <div class="modal-box text-left" style="max-width: 550px;">
+    <div class="flex justify-between items-center" style="margin-bottom: 12px;">
+      <h3 class="font-title" style="font-size: 18px; color: #16a34a;"><i class="fa-solid fa-layer-group"></i> Create Interactive 6-Stage Lesson</h3>
+      <button class="btn-secondary" style="padding: 2px 8px;" onclick="closeModal('modal-create-lesson')">X</button>
+    </div>
+    <label style="font-weight: bold; font-size: 12px;">Lesson Title:</label>
+    <input id="build-lesson-title" type="text" class="input-field" placeholder="Advanced Prefix & Suffix Mastery">
+    <button class="btn-primary" style="width: 100%;" onclick="submitCreateLesson()">Save Lesson Track</button>
+  </div>
+</div>
+
+<div id="modal-send-parent-msg" class="modal-overlay">
+  <div class="modal-box text-left">
+    <div class="flex justify-between items-center" style="margin-bottom: 12px;">
+      <h3 class="font-title" style="font-size: 17px; color: #d97706;"><i class="fa-solid fa-envelope"></i> Message to Parent</h3>
+      <button class="btn-secondary" style="padding:2px 8px;" onclick="closeModal('modal-send-parent-msg')">X</button>
+    </div>
+    <p style="margin-bottom: 8px; font-weight: bold; font-size: 12px;">To Parent of: <span id="m-parent-stu-name" style="color: #d97706;"></span> (<span id="m-parent-stu-id"></span>)</p>
+    <label style="font-weight: bold; font-size: 12px;">Subject / Title:</label>
+    <input id="m-parent-title" type="text" class="input-field" placeholder="รายงานความก้าวหน้าและการเข้าเรียน">
+    <label style="font-weight: bold; font-size: 12px;">Message Details:</label>
+    <textarea id="m-parent-text" class="input-field" placeholder="พิมพ์ข้อความถึงผู้ปกครองที่นี่..."></textarea>
+    <button class="btn-primary" style="width: 100%;" onclick="submitParentMessage()">Send Message</button>
+  </div>
+</div>
+
+<div id="modal-join-class" class="modal-overlay">
+  <div class="modal-box text-left">
+    <div class="flex justify-between items-center" style="margin-bottom: 12px;">
+      <h3 class="font-title" style="font-size: 17px; color: #d97706;"><i class="fa-solid fa-key"></i> Join Classroom Code</h3>
+      <button class="btn-secondary" style="padding:2px 8px;" onclick="closeModal('modal-join-class')">X</button>
+    </div>
+    <label style="font-weight: bold; font-size: 12px;">Classroom Code:</label>
+    <input id="m-join-code" type="text" class="input-field text-center" placeholder="FRM-53X" style="letter-spacing: 2px; font-weight: bold; text-transform: uppercase;">
+    <button class="btn-primary" style="width: 100%;" onclick="submitJoinClass()">Join Classroom</button>
+  </div>
+</div>
+
+<div id="modal-submit-assignment" class="modal-overlay">
+  <div class="modal-box text-left">
+    <div class="flex justify-between items-center" style="margin-bottom: 12px;">
+      <h3 class="font-title" style="font-size: 17px; color: #16a34a;"><i class="fa-solid fa-file-arrow-up"></i> Submit Assignment</h3>
+      <button class="btn-secondary" style="padding:2px 8px;" onclick="closeModal('modal-submit-assignment')">X</button>
+    </div>
+    <h4 id="m-submit-assign-title" class="font-title" style="margin-bottom: 4px;"></h4>
+    <p id="m-submit-assign-desc" style="font-size: 12px; color: #64748b; margin-bottom: 12px;"></p>
+    
+    <div class="file-upload-box" onclick="triggerSimulatedFileSelect()">
+      <i class="fa-solid fa-cloud-arrow-up" style="font-size: 26px; color: #ff9500; margin-bottom: 4px;"></i>
+      <div id="m-submit-file-name" style="font-weight: bold; font-size: 12px;">Click to attach file (PDF / DOCX)</div>
+      <span style="font-size: 10px; color: #64748b;">Max file size: 25MB</span>
+    </div>
+    <button class="btn-primary" style="width: 100%;" onclick="submitAssignmentFile()">Submit Task</button>
+  </div>
+</div>
+
+<div id="modal-create-meeting-room" class="modal-overlay">
+  <div class="modal-box text-left">
+    <div class="flex justify-between items-center" style="margin-bottom: 12px;">
+      <h3 class="font-title" style="font-size: 17px; color: #d97706;"><i class="fa-solid fa-comments"></i> Create Meeting Space</h3>
+      <button class="btn-secondary" style="padding:2px 8px;" onclick="closeModal('modal-create-meeting-room')">X</button>
+    </div>
+    <label style="font-weight: bold; font-size: 12px;">Room Title / Topic:</label>
+    <input id="m-room-title" type="text" class="input-field" placeholder="CEFR Prefix Discussion Group">
+    <label style="font-weight: bold; font-size: 12px;">Room Access Setting:</label>
+    <select id="m-room-lock-select" class="input-field" onchange="toggleRoomPinInput(this.value)">
+      <option value="public">🔓 Public (Anyone in class can join)</option>
+      <option value="locked">🔒 Private / Locked (PIN Required)</option>
+    </select>
+    <div id="m-room-pin-container" class="hidden">
+      <label style="font-weight: bold; font-size: 12px;">Set 4-Digit Room PIN:</label>
+      <input id="m-room-pin" type="password" maxlength="4" class="input-field" placeholder="1234">
+    </div>
+    <button class="btn-primary" style="width: 100%; margin-top: 4px;" onclick="submitCreateMeetingRoom()">Create Room</button>
+  </div>
+</div>
+
+<div id="modal-meeting-room-chat" class="modal-overlay">
+  <div class="modal-box text-left" style="max-width: 580px;">
+    <div class="flex justify-between items-center" style="margin-bottom: 10px;">
+      <div>
+        <h3 id="m-chat-room-title" class="font-title" style="font-size: 16px;">Group Discussion</h3>
+        <span id="m-chat-room-status" style="font-size: 10px; color: #64748b;"></span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="btn-toggle-chat-lock" class="btn-secondary" style="font-size: 10px; padding: 3px 8px;" onclick="toggleCurrentChatLock()"></button>
+        <button class="btn-secondary" style="padding:2px 8px;" onclick="closeModal('modal-meeting-room-chat')">X</button>
+      </div>
+    </div>
+
+    <div id="m-chat-box" class="chat-box"></div>
+
+    <div id="chat-attached-file-preview" class="hidden" style="margin-bottom: 8px; font-size: 10px; background: rgba(0, 229, 255, 0.15); padding: 4px 10px; border-radius: 6px; color: #0284c7;" class="flex justify-between items-center">
+      <span>📎 File Attached: <strong id="chat-attached-file-name">doc.pdf</strong></span>
+      <span style="cursor:pointer; font-weight:bold;" onclick="removeChatAttachedFile()">X</span>
+    </div>
+
+    <div class="flex gap-2">
+      <button class="btn-secondary" style="padding: 8px 12px;" onclick="triggerChatFileUpload()" title="Attach File"><i class="fa-solid fa-paperclip"></i></button>
+      <input id="m-chat-input" type="text" class="input-field" placeholder="Type a message or share link..." style="margin-bottom:0;" onkeypress="if(event.key==='Enter') sendChatMessage()">
+      <button class="btn-primary" style="padding: 8px 16px;" onclick="sendChatMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+    </div>
+  </div>
+</div>
+
+<div id="modal-vocab-meaning" class="modal-overlay">
+  <div class="modal-box text-center" style="max-width: 380px;">
+    <div style="font-size: 22px; color: #d97706; background: rgba(217, 119, 6, 0.15); width: 44px; height: 44px; border-radius: 12px; margin: 0 auto 10px auto; display: flex; align-items: center; justify-content: center;">
+      <i class="fa-solid fa-book-bookmark"></i>
+    </div>
+    <h3 id="vocab-modal-word" class="font-title" style="font-size: 20px; color: #d97706; margin-bottom: 4px;">Word</h3>
+    <div id="vocab-modal-meaning" style="font-size: 13px; font-weight: bold; color: #16a34a; margin-bottom: 12px; line-height: 1.5; background: rgba(34, 197, 94, 0.12); padding: 8px; border-radius: 8px; border: 1.5px solid rgba(34, 197, 94, 0.25);">Meaning</div>
+    <button class="btn-primary" style="width: 100%;" onclick="closeModal('modal-vocab-meaning')">Got It!</button>
+  </div>
+</div>
+
+<!-- SCRIPT LOGIC -->
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbzND2_ddksrJQ_DNQVepfKTjGve8zro8tvX5-pVdQKlpBRSijqnMNalASKC7AU6ucVJ/exec";
+
+function toggleTheme() {
+  var isLight = document.body.classList.toggle('light-mode');
+  var icon = document.getElementById('theme-icon');
+  if (isLight) {
+    if (icon) icon.className = 'fa-solid fa-moon';
+    localStorage.setItem('goinclass_theme', 'light');
+  } else {
+    if (icon) icon.className = 'fa-solid fa-sun';
+    localStorage.setItem('goinclass_theme', 'dark');
+  }
+}
+
+function initTheme() {
+  var savedTheme = localStorage.getItem('goinclass_theme');
+  var icon = document.getElementById('theme-icon');
+  if (savedTheme === 'light') {
+    document.body.classList.add('light-mode');
+    if (icon) icon.className = 'fa-solid fa-moon';
+  } else {
+    document.body.classList.remove('light-mode');
+    if (icon) icon.className = 'fa-solid fa-sun';
+  }
+}
+
+var audioCtx = null;
+function getAudioContext() {
+  if(!audioCtx) {
+    var AudioCtxClass = window.AudioContext || window.webkitAudioContext;
+    if(AudioCtxClass) audioCtx = new AudioCtxClass();
+  }
+  if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+
+function playCorrectSound() {
+  try {
+    var ctx = getAudioContext(); if(!ctx) return;
+    var osc = ctx.createOscillator(); var gain = ctx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(523.25, ctx.currentTime);
+    osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.1);
+    osc.frequency.setValueAtTime(783.99, ctx.currentTime + 0.2);
+    gain.gain.setValueAtTime(0.15, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.start(); osc.stop(ctx.currentTime + 0.4);
+  } catch(e){}
+}
+
+function playWrongSound() {
+  try {
+    var ctx = getAudioContext(); if(!ctx) return;
+    var osc = ctx.createOscillator(); var gain = ctx.createGain();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(150, ctx.currentTime);
+    osc.frequency.setValueAtTime(110, ctx.currentTime + 0.15);
+    gain.gain.setValueAtTime(0.15, ctx.currentTime);
+    gain.gain.linearRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.start(); osc.stop(ctx.currentTime + 0.3);
+  } catch(e){}
+}
+
+function playEngineRev() {
+  try {
+    var ctx = getAudioContext(); if(!ctx) return;
+    var osc = ctx.createOscillator(); var gain = ctx.createGain();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(90, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(300, ctx.currentTime + 0.2);
+    osc.frequency.exponentialRampToValueAtTime(120, ctx.currentTime + 0.4);
+    gain.gain.setValueAtTime(0.15, ctx.currentTime);
+    gain.gain.linearRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.start(); osc.stop(ctx.currentTime + 0.4);
+  } catch(e){}
+}
+
+function customAlert(msg, title, icon) {
+  document.getElementById('custom-alert-title').innerText = title || 'แจ้งเตือนระบบ';
+  document.getElementById('custom-alert-msg').innerText = msg || '';
+  
+  var iconEl = document.getElementById('custom-alert-icon');
+  if (icon && icon.indexOf('fa-') !== -1) {
+    iconEl.innerHTML = '<i class="' + icon + '"></i>';
+  } else {
+    iconEl.innerHTML = '<i class="fa-solid fa-shield-halved"></i>';
+  }
+  openModal('modal-custom-alert');
+}
+
+window.alert = function(msg) { customAlert(msg, 'แจ้งเตือนระบบ', 'fa-solid fa-lightbulb'); };
+
+var videoTimerInterval = null;
+var currentMcqIdx = 0;
+var currentFillIdx = 0;
+var currentBuilderIdx = 0;
+var currentSignUpRole = 'student';
+
+var STAGE_METADATA = [
+  { category: 'A2 LISTENING', title: 'Video Warmup', sub: 'Watch 2-min clip & answer war...', xp: '+40 XP' },
+  { category: 'A2 READING', title: 'Reading Passage', sub: 'Read the pit-stop story and unlo...', xp: '+50 XP' },
+  { category: 'A2 GRAMMAR', title: 'MCQ Quiz Pit', sub: 'Multiple choice speed challenge.', xp: '+60 XP' },
+  { category: 'A2 VOCAB', title: 'Pit Stop Match', sub: 'Match words with engine parts.', xp: '+50 XP' },
+  { category: 'A2 DIAGNOSTICS', title: 'Mechanic Fix', sub: 'Sentence repair shop challenge.', xp: '+70 XP' },
+  { category: 'A2 ASSEMBLY', title: 'Final Lap Word', sub: 'Assemble the final victory sentence...', xp: '+100 XP' }
+];
+
+var state = {
+  currentUser: null,
+  activeClassId: 'cls-1',
+  activeLessonId: 'les-1',
+  activeStageIdx: 0,
+  activeMeetingRoomId: null,
+  selectedMatchWord: null,
+  builderCurrentParts: [],
+  simulatedAttachedFile: null,
+
+  classrooms: [
+    {
+      id: 'cls-1',
+      title: 'Form and Usage 3',
+      grade: 'ชั้นมัธยมศึกษาปีที่ 5/3',
+      code: 'FRM-53X',
+      teacherName: 'ครูสมศรี ใจดี (Kru Somsri)',
+      teacherContact: 'Line: @krusomsri | Tel: 081-234-5678 | Email: somsee@school.com',
+      students: [],
+      lessons: [
+        {
+          id: 'les-1',
+          title: 'Advanced Prefix & Suffix Mastery (CEFR B2/C1)',
+          videoUrl: 'https://drive.google.com/file/d/1Aua7V_GtRPUOLcllRZEf5cyFDa8XCVYd/preview',
+          readingContent: 'In today\'s fast-changing world, many people underestimate the importance of small actions. They often believe that achieving success requires extraordinary talent or unlimited resources. However, research suggests that consistent effort and a positive attitude can significantly influence personal development.\n\nWhen Emma started university, she felt unprepared for the challenges ahead. Her classmates seemed more confident, and she frequently compared herself with them. As a result, she became dissatisfied with her own progress and gradually lost motivation. She even considered discontinuing her studies because she believed she was incapable of meeting academic expectations.\n\nOne day, her professor introduced a simple but effective strategy: setting realistic goals and evaluating progress regularly. Emma decided to reorganize her daily routine. Instead of studying for several hours without a break, she divided her work into manageable tasks. She also began reading independently, participating actively in discussions, and asking questions whenever instructions were unclear.\n\nAlthough the changes initially seemed insignificant, their effects became noticeable over time. Emma\'s confidence improved, and she developed a more responsible attitude toward learning. She realized that making mistakes was not a sign of weakness but an opportunity for improvement. Rather than becoming discouraged by criticism, she learned to interpret feedback as useful guidance.\n\nBy the end of the semester, Emma had become more independent and knowledgeable. Her experience taught her that personal growth does not happen automatically. It requires patience, determination, and a willingness to reconsider ineffective habits. Most importantly, she understood that success is not simply the result of natural ability; it is often the outcome of continuous effort and a meaningful commitment to improvement.\n\nEmma\'s story reminds us that change does not always require dramatic decisions. Sometimes, the most powerful transformation begins with a small, deliberate action repeated every day.',
+          vocabMap: {
+            'underestimate': 'under- (ต่ำกว่า/น้อยเกินไป) + estimate = ประเมินค่าต่ำเกินไป',
+            'extraordinary': 'extra- (นอกเหนือ/เกินกว่า) + ordinary = ไม่ธรรมดา / พิเศษยิ่งใหญ่',
+            'unlimited': 'un- (ไม่) + limited = ไร้ขีดจำกัด',
+            'unprepared': 'un- (ไม่) + prepared = ที่ไม่ได้เตรียมพร้อม',
+            'dissatisfied': 'dis- (ไม่) + satisfied = ไม่พึงพอใจ',
+            'discontinuing': 'dis- (หยุด/ไม่) + continuing = การหยุดพัก / การเลิกทำ',
+            'incapable': 'in- (ไม่) + capable = ไม่สามารถทำได้ / ไร้ความสามารถ',
+            'reorganize': 're- (ทำใหม่) + organize = จัดระบบใหม่',
+            'manageable': 'manage + -able (สามารถ) = ที่สามารถจัดการควบคุมได้',
+            'independently': 'in- (ไม่) + depend + -ent + -ly = อย่างพึ่งพาตนเอง / เป็นอิสระ',
+            'unclear': 'un- (ไม่) + clear = ไม่ชัดเจน',
+            'insignificant': 'in- (ไม่) + significant = เล็กน้อย / ไม่สำคัญ',
+            'responsible': 'response + -ible = มีความรับผิดชอบ',
+            'improvement': 'improve + -ment (การ/สภาพ) = การปรับปรุงพัฒนา',
+            'discouraged': 'dis- (ลด/ไม่) + couraged = ท้อแท้ / หมดกำลังใจ',
+            'independent': 'in- (ไม่) + dependent = ที่เป็นอิสระ / พึ่งพาตนเอง',
+            'knowledgeable': 'knowledge + -able = มีความรู้อย่างกว้างขวาง',
+            'reconsider': 're- (ทำอีกครั้ง) + consider = ทบทวนพิจารณาใหม่',
+            'ineffective': 'in- (ไม่) + effective = ไร้ประสิทธิภาพ',
+            'transformation': 'trans- (ข้าม/เปลี่ยน) + form + -ation = การเปลี่ยนแปลงอย่างสิ้นเชิง'
+          },
+          mcqList: [
+            {
+              q: "1. What is the main function of 'dis-' in 'discontinuing'?",
+              opts: ['To stop or reverse an action', 'To repeat an action', 'To do something wrongly'],
+              ans: 0
+            },
+            {
+              q: "2. Which prefix forms the opposite of 'capable'?",
+              opts: ['in-', 'un-', 'dis-'],
+              ans: 0
+            },
+            {
+              q: "3. What does 're-' mean in the word 'reconsider'?",
+              opts: ['To think or evaluate again', 'To think incorrectly', 'To think beforehand'],
+              ans: 0
+            },
+            {
+              q: "4. What is the primary function of the suffix '-able'?",
+              opts: ['Forms adjectives (can be done)', 'Forms adverbs (manner)', 'Forms abstract nouns (state)'],
+              ans: 0
+            },
+            {
+              q: "5. What is the structure of 'independently'?",
+              opts: ['in- (not) + depend + -ent + -ly', 'independ + -ently', 'ind- + dependent + -ly'],
+              ans: 0
+            }
+          ],
+          match: [
+            { w: 'under-', m: 'ต่ำกว่า / น้อยเกินไป' },
+            { w: 'dis-', m: 'หยุด / ไม่ / ตรงข้าม' },
+            { w: 'in- / im-', m: 'ไม่ / ปราศจาก' },
+            { w: 're-', m: 'อีกครั้ง / ปรับใหม่' },
+            { w: 'trans-', m: 'ข้าม / เปลี่ยนผ่าน' },
+            { w: '-able / -ible', m: 'สามารถ...ได้' },
+            { w: '-ment', m: 'สภาพ / การกระทำ' },
+            { w: '-tion / -sion', m: 'กระบวนการ / ผลจากการกระทำ' }
+          ],
+          fillList: [
+            {
+              sentence: "1. Emma felt __________ when she compared herself with her classmates. (prepare)",
+              opts: ['unprepared', 'misprepared', 'nonprepared'],
+              ans: 'unprepared'
+            },
+            {
+              sentence: "2. Students should take __________ for their own learning. (responsible)",
+              opts: ['responsibility', 'irresponsibility', 'responsibleness'],
+              ans: 'responsibility'
+            },
+            {
+              sentence: "3. Regular practice can lead to significant __________. (improve)",
+              opts: ['improvement', 'disimprovement', 'improvable'],
+              ans: 'improvement'
+            },
+            {
+              sentence: "4. Successful learners are often willing to __________ their study habits. (organize)",
+              opts: ['reorganize', 'disorganize', 'unorganize'],
+              ans: 'reorganize'
+            },
+            {
+              sentence: "5. Personal growth requires patience and __________. (determine)",
+              opts: ['determination', 'indetermination', 'determinement'],
+              ans: 'determination'
+            },
+            {
+              sentence: "6. It is __________ to expect immediate results without making an effort. (realistic)",
+              opts: ['unrealistic', 'disrealistic', 'inrealistic'],
+              ans: 'unrealistic'
+            },
+            {
+              sentence: "7. Students should become more __________ rather than depending entirely on their teachers. (depend)",
+              opts: ['independent', 'undependent', 'misdependent'],
+              ans: 'independent'
+            },
+            {
+              sentence: "8. Constructive feedback can be extremely __________ to learners. (value)",
+              opts: ['valuable', 'invaluableness', 'unvaluable'],
+              ans: 'valuable'
+            }
+          ],
+          builderList: [
+            {
+              prompt: "Assemble the noun for 'ความรับผิดชอบ':",
+              target: 'RESPONSIBILITY',
+              parts: ['RESPONSI', 'BILITY', 'DIS', 'NESS', 'MENT']
+            },
+            {
+              prompt: "Assemble the noun for 'การปรับโครงสร้างใหม่' :",
+              target: 'REORGANIZATION',
+              parts: ['RE', 'ORGANI', 'ZATION', 'UN', 'ABLE']
+            },
+            {
+              prompt: "Assemble the adverb for 'อย่างไม่สำคัญ / เล็กน้อย' :",
+              target: 'INSIGNIFICANTLY',
+              parts: ['IN', 'SIGNIFICANT', 'LY', 'MIS', 'NESS']
+            },
+            {
+              prompt: "Assemble the noun for 'การเปลี่ยนแปลงอย่างสิ้นเชิง':",
+              target: 'TRANSFORMATION',
+              parts: ['TRANS', 'FORM', 'ATION', 'DIS', 'LESS']
+            }
+          ]
+        }
+      ],
+      assignments: [],
+      meetingRooms: []
+    }
+  ],
+
+  studentProgress: {},
+  parentMessages: []
+};
+
+window.onload = function() {
+  initTheme();
+  loadFromLocalStorage();
+};
+
+function resetAllProgress() {
+  localStorage.removeItem('goinclass_state_v2');
+  state.studentProgress = {};
+  playWrongSound();
+  customAlert('รีเซ็ตประวัติการเรียนและล็อก Stage ทั้งหมดกลับเป็น 0% เรียบร้อยแล้วครับ!', 'รีเซ็ตสำเร็จ', 'fa-solid fa-rotate-right');
+  setTimeout(function() { location.reload(); }, 1000);
+}
+
+function saveToLocalStorage() {
+  try {
+    localStorage.setItem('goinclass_state_v2', JSON.stringify({
+      classrooms: state.classrooms,
+      studentProgress: state.studentProgress,
+      parentMessages: state.parentMessages
+    }));
+  } catch(e) {}
+}
+
+function loadFromLocalStorage() {
+  try {
+    var data = localStorage.getItem('goinclass_state_v2');
+    if (data) {
+      var parsed = JSON.parse(data);
+      if (parsed.classrooms) state.classrooms = parsed.classrooms;
+      if (parsed.studentProgress) state.studentProgress = parsed.studentProgress;
+      if (parsed.parentMessages) state.parentMessages = parsed.parentMessages;
+    }
+  } catch(e) {}
+}
+
+function switchAuthTab(tab) {
+  if (tab === 'login') {
+    document.getElementById('tab-btn-login').classList.add('active');
+    document.getElementById('tab-btn-signup').classList.remove('active');
+    document.getElementById('form-login').classList.remove('hidden');
+    document.getElementById('form-signup').classList.add('hidden');
+  } else {
+    document.getElementById('tab-btn-signup').classList.add('active');
+    document.getElementById('tab-btn-login').classList.remove('active');
+    document.getElementById('form-signup').classList.remove('hidden');
+    document.getElementById('form-login').classList.add('hidden');
+  }
+}
+
+function setSignUpRole(role) {
+  currentSignUpRole = role;
+  ['student', 'teacher', 'parent'].forEach(function(r) {
+    document.getElementById('chip-' + r).classList.remove('active');
+  });
+  document.getElementById('chip-' + role).classList.add('active');
+
+  if (role === 'student') {
+    document.getElementById('s-stu-id-container').classList.remove('hidden');
+  } else {
+    document.getElementById('s-stu-id-container').classList.add('hidden');
+  }
+}
+
+async function doLogin() {
+  var email = document.getElementById('l-email').value.trim();
+  var password = document.getElementById('l-pass').value.trim();
+
+  if (!email || !password) return customAlert('กรุณากรอก Email/Student ID และ Password', 'ข้อมูลไม่ครบถ้วน', 'fa-solid fa-triangle-exclamation');
+
+  playEngineRev();
+
+  var btn = document.getElementById('btn-login-submit');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังตรวจสอบ...';
+
+  try {
+    var res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'login', email: email, password: password })
+    });
+    var result = await res.json();
+
+    if (result.status === 'success') {
+      state.currentUser = result.user;
+      ensureUserInClass(result.user);
+      redirectUserByRole();
+    } else {
+      customAlert(result.message, 'เข้าสู่ระบบไม่สำเร็จ', 'fa-solid fa-circle-xmark');
+    }
+  } catch (err) {
+    // Fallback Login
+    var fallbackUser = { role: 'student', name: email.split('@')[0] || 'User', id: email.indexOf('STU') === 0 ? email : 'STU-' + Math.floor(100 + Math.random() * 900), email: email };
+    if (email === 'teacher@school.com') {
+      fallbackUser = { role: 'teacher', name: 'ครูสมศรี ใจดี', id: 'TCH-001', email: 'teacher@school.com' };
+    }
+    state.currentUser = fallbackUser;
+    ensureUserInClass(fallbackUser);
+    redirectUserByRole();
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fa-solid fa-key"></i> START ENGINE (LOGIN)';
+  }
+}
+
+async function doSignUp() {
+  var name = document.getElementById('s-name').value.trim();
+  var email = document.getElementById('s-email').value.trim();
+  var password = document.getElementById('s-pass').value.trim();
+  var studentId = document.getElementById('s-stuid').value.trim();
+
+  if (!name || !email || !password) return customAlert('กรุณากรอกข้อมูลให้ครบทุกช่อง', 'ข้อมูลไม่ครบถ้วน', 'fa-solid fa-triangle-exclamation');
+  if (currentSignUpRole === 'student' && !studentId) return customAlert('กรุณากรอก Student ID สำหรับนักเรียน', 'ข้อมูลไม่ครบถ้วน', 'fa-solid fa-triangle-exclamation');
+
+  var btn = document.getElementById('btn-signup-submit');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังบันทึกข้อมูล...';
+
+  try {
+    var res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        action: 'signup',
+        name: name,
+        email: email,
+        password: password,
+        role: currentSignUpRole,
+        studentId: studentId
+      })
+    });
+    var result = await res.json();
+
+    if (result.status === 'success') {
+      state.currentUser = result.user;
+      ensureUserInClass(result.user);
+      redirectUserByRole();
+    } else {
+      customAlert(result.message, 'สมัครสมาชิกไม่สำเร็จ', 'fa-solid fa-circle-xmark');
+    }
+  } catch (err) {
+    var newUser = { role: currentSignUpRole, name: name, email: email, studentId: studentId, id: studentId || 'STU-' + Math.floor(Math.random()*1000) };
+    state.currentUser = newUser;
+    ensureUserInClass(newUser);
+    redirectUserByRole();
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fa-solid fa-user-plus"></i> CREATE ACCOUNT (SIGN UP)';
+  }
+}
+
+function ensureUserInClass(user) {
+  if (!user || user.role !== 'student') return;
+  var stuId = user.id || user.studentId;
+  if (!stuId) return;
+
+  var activeClass = state.classrooms[0];
+  if (!activeClass.students.some(function(s){ return s.id === stuId; })) {
+    activeClass.students.push({ id: stuId, name: user.name, email: user.email });
+    saveToLocalStorage();
+  }
+}
+
+function redirectUserByRole() {
+  if (!state.currentUser) return switchView('auth');
+  if (state.currentUser.role === 'teacher') switchView('teacher');
+  else if (state.currentUser.role === 'student') switchView('student');
+  else if (state.currentUser.role === 'parent') switchView('parent');
+}
+
+function logout() {
+  state.currentUser = null;
+  if (videoTimerInterval) clearInterval(videoTimerInterval);
+  document.getElementById('main-header').classList.add('hidden');
+  switchView('auth');
+}
+
+function goDashboard() { redirectUserByRole(); }
+
+function openActiveRaceDirect() {
+  var activeClass = state.classrooms[0];
+  state.activeClassId = activeClass.id;
+  state.activeLessonId = activeClass.lessons[0].id;
+  switchView('lesson');
+}
+
+function switchView(viewName) {
+  var views = ['view-auth', 'view-teacher', 'view-student', 'view-student-hub', 'view-lesson', 'view-parent'];
+  for (var i = 0; i < views.length; i++) {
+    document.getElementById(views[i]).classList.add('hidden');
+  }
+
+  if (videoTimerInterval) clearInterval(videoTimerInterval);
+
+  var header = document.getElementById('main-header');
+  var badge = document.getElementById('user-badge');
+
+  if (viewName === 'auth') {
+    header.classList.add('hidden');
+    document.getElementById('view-auth').classList.remove('hidden');
+    return;
+  }
+
+  header.classList.remove('hidden');
+  if (state.currentUser) {
+    var roleTitle = state.currentUser.role.toUpperCase();
+    badge.innerHTML = '<div class="robot-avatar" style="width:22px; height:22px; font-size:11px;"><i class="fa-solid fa-robot"></i></div> <div><span style="color:#d97706;">' + state.currentUser.name + '</span> <span style="font-size:10px; opacity:0.8;">(' + roleTitle + ')</span></div>';
+  }
+
+  if (viewName === 'teacher') {
+    renderTeacherDashboard();
+    document.getElementById('view-teacher').classList.remove('hidden');
+  } else if (viewName === 'student') {
+    renderStudentDashboard();
+    document.getElementById('view-student').classList.remove('hidden');
+  } else if (viewName === 'student-hub') {
+    renderStudentHub();
+    document.getElementById('view-student-hub').classList.remove('hidden');
+  } else if (viewName === 'lesson') {
+    renderLessonView();
+    document.getElementById('view-lesson').classList.remove('hidden');
+  } else if (viewName === 'parent') {
+    renderParentDashboard();
+    document.getElementById('view-parent').classList.remove('hidden');
+  }
+}
+
+function updateStudentTelemetry() {
+  if (!state.currentUser || state.currentUser.role !== 'student') return;
+
+  var stuId = state.currentUser.id || state.currentUser.studentId;
+  var myClasses = state.classrooms.filter(function(c) {
+    return c.students.some(function(s){ return s.id === stuId; });
+  });
+  if (myClasses.length === 0) myClasses = state.classrooms;
+
+  var totalStages = 0;
+  var completedStagesCount = 0;
+
+  myClasses.forEach(function(cls) {
+    (cls.lessons || []).forEach(function(les) {
+      totalStages += 6;
+      var done = state.studentProgress[stuId + '_' + les.id] || [];
+      completedStagesCount += done.length;
+    });
+  });
+
+  var activeClass = state.classrooms.find(function(c){ return c.id === state.activeClassId; }) || myClasses[0];
+  var att = calculateStudentAttendance(stuId, activeClass);
+
+  var pendingAssignments = [];
+  myClasses.forEach(function(cls) {
+    (cls.assignments || []).forEach(function(a) {
+      var isSub = (a.submissions || []).some(function(s){ return s.studentId === stuId; });
+      if (!isSub) pendingAssignments.push(a);
+    });
+  });
+
+  var stat1 = document.getElementById('tel-stat-1-val');
+  if (stat1) stat1.innerText = completedStagesCount + ' / ' + totalStages + ' Stages';
+
+  var stat2 = document.getElementById('tel-stat-2-val');
+  if (stat2) stat2.innerText = att.pct + '% Attendance';
+
+  var questTitle = document.getElementById('tel-quest-title');
+  var questSub = document.getElementById('tel-quest-sub');
+  var questXp = document.getElementById('tel-quest-xp');
+
+  if (pendingAssignments.length > 0) {
+    if (questTitle) questTitle.innerText = 'Assignment Due: ' + pendingAssignments[0].title;
+    if (questSub) questSub.innerText = 'Due ' + pendingAssignments[0].dueDate + ' • Submit file now';
+    if (questXp) questXp.innerText = 'Pending Task';
+  } else if (completedStagesCount < totalStages) {
+    if (questTitle) questTitle.innerText = 'Next Target: Complete Next Stage';
+    if (questSub) questSub.innerText = 'Keep racing to reach 60% Attendance threshold!';
+    if (questXp) questXp.innerText = '+50 XP';
+  } else {
+    if (questTitle) questTitle.innerText = 'All Stages Completed!';
+    if (questSub) questSub.innerText = 'Great job! You have finished all available tracks.';
+    if (questXp) questXp.innerText = 'MAX XP';
+  }
+}
+
+// TEACHER DASHBOARD
+function renderTeacherDashboard() {
+  var listEl = document.getElementById('teacher-class-list');
+  listEl.innerHTML = '';
+
+  state.classrooms.forEach(function(cls) {
+    var item = document.createElement('div');
+    item.className = 'class-sidebar-item ' + (cls.id === state.activeClassId ? 'active' : '');
+    item.onclick = function() { state.activeClassId = cls.id; renderTeacherDashboard(); };
+    item.innerHTML = cls.title + '<br><span style="font-size:11px; opacity:0.8;">' + cls.grade + '</span>';
+    listEl.appendChild(item);
+  });
+
+  var activeClass = state.classrooms.find(function(c){ return c.id === state.activeClassId; }) || state.classrooms[0];
+  state.activeClassId = activeClass.id;
+
+  document.getElementById('tc-current-title').innerText = activeClass.title + ' (' + activeClass.grade + ')';
+  document.getElementById('tc-current-code').innerText = activeClass.code;
+
+  renderTeacherLessons(activeClass);
+  renderTeacherStudents(activeClass);
+  renderTeacherAssignments(activeClass);
+}
+
+function switchTeacherTab(tab) {
+  ['lessons', 'students', 'assignments'].forEach(function(t) {
+    document.getElementById('tab-' + t.charAt(0)).classList.remove('active');
+    document.getElementById('tc-' + t).classList.add('hidden');
+  });
+  document.getElementById('tab-' + tab.charAt(0)).classList.add('active');
+  document.getElementById('tc-' + tab).classList.remove('hidden');
+}
+
+function renderTeacherLessons(cls) {
+  var container = document.getElementById('teacher-lesson-list');
+  container.innerHTML = '';
+
+  if (!cls.lessons || cls.lessons.length === 0) {
+    container.innerHTML = '<p style="color:#64748b;">No lessons created yet.</p>';
+    return;
+  }
+
+  cls.lessons.forEach(function(les) {
+    var div = document.createElement('div');
+    div.className = 'card';
+    div.style.padding = '16px';
+    div.style.marginBottom = '0';
+    div.innerHTML = '<div class="responsive-flex-card flex justify-between items-center"><div style="flex: 1;"><h4 class="font-title" style="font-size: 15px; color:#d97706; line-height: 1.3;">' + les.title + '</h4><span style="font-size:11px; opacity:0.8; display: inline-block; margin-top: 4px;"><i class="fa-solid fa-layer-group"></i> 6 Interactive Stages Configured</span></div><button class="btn-secondary" style="font-size:11px; padding:6px 12px;" onclick="previewLesson(\'' + les.id + '\')"><i class="fa-solid fa-play"></i> Preview Race</button></div>';
+    container.appendChild(div);
+  });
+}
+
+function renderTeacherStudents(cls) {
+  var tbody = document.getElementById('teacher-student-table-body');
+  tbody.innerHTML = '';
+
+  if (!cls.students || cls.students.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#64748b;">ยังไม่มีนักเรียนในห้องนี้ (กด "Add Student" เพื่อเพิ่มนักเรียน)</td></tr>';
+    return;
+  }
+
+  cls.students.forEach(function(stu) {
+    var att = calculateStudentAttendance(stu.id, cls);
+    var tr = document.createElement('tr');
+    var statusBg = att.isChecked ? 'rgba(34, 197, 94, 0.15)' : 'rgba(239, 68, 68, 0.15)';
+    var statusColor = att.isChecked ? '#16a34a' : '#dc2626';
+    var statusLabel = att.isChecked ? 'Present' : 'Incomplete';
+
+    tr.innerHTML = 
+      '<td>' +
+        '<div class="flex items-center gap-2">' +
+          '<div class="robot-avatar" style="width:28px; height:28px; font-size:12px;"><i class="fa-solid fa-robot"></i></div>' +
+          '<strong style="font-size:13px;">' + stu.name + '</strong>' +
+        '</div>' +
+      '</td>' +
+      '<td>' +
+        '<span style="font-size:11px; opacity:0.7;">Student ID: </span>' +
+        '<strong>' + stu.id + '</strong>' +
+      '</td>' +
+      '<td>' +
+        '<span style="background: ' + statusBg + '; color: ' + statusColor + '; padding: 4px 10px; border-radius: 6px; font-weight: bold; font-size: 11px; border: 1.5px solid ' + statusColor + '; white-space:nowrap; display:inline-block;">' + att.pct + '% (' + statusLabel + ')</span>' +
+      '</td>' +
+      '<td>' +
+        '<button class="btn-secondary" style="font-size: 11px; padding: 6px 12px; width:100%; justify-content:center;" onclick="openMessageParentModal(\'' + stu.id + '\', \'' + stu.name + '\')"><i class="fa-regular fa-envelope"></i> Message Parent</button>' +
+      '</td>';
+    tbody.appendChild(tr);
+  });
+}
+
+function renderTeacherAssignments(cls) {
+  var container = document.getElementById('teacher-assignment-list');
+  container.innerHTML = '';
+
+  if (!cls.assignments || cls.assignments.length === 0) {
+    container.innerHTML = '<p style="color:#64748b;">No active assignments.</p>';
+    return;
+  }
+
+  cls.assignments.forEach(function(asg) {
+    var subCount = asg.submissions ? asg.submissions.length : 0;
+    var div = document.createElement('div');
+    div.className = 'card';
+    div.style.padding = '14px';
+    div.style.marginBottom = '0';
+    div.innerHTML = '<div class="responsive-flex-card flex justify-between items-center"><div style="flex: 1;"><strong style="font-size:13px;">' + asg.title + '</strong><p style="font-size:11px; opacity:0.8; margin-top: 2px;">' + asg.desc + '</p><span style="font-size:11px; color:#ff3b30; font-weight:bold; display: inline-block; margin-top: 4px;">Due: ' + asg.dueDate + '</span></div><span style="background:rgba(217, 119, 6, 0.15); color:#d97706; border:1px solid #d97706; padding:4px 10px; border-radius:6px; font-size:11px; font-weight:bold; white-space: nowrap;">Submitted: ' + subCount + ' / ' + cls.students.length + '</span></div>';
+    container.appendChild(div);
+  });
+}
+
+function openCreateClassModal() { openModal('modal-create-classroom'); }
+
+function submitCreateClassroom() {
+  var title = document.getElementById('m-class-title').value.trim();
+  var grade = document.getElementById('m-class-grade').value.trim();
+  var stuRaw = document.getElementById('m-class-students').value.trim();
+
+  if (!title || !grade) return customAlert('กรุณากรอกชื่อวิชาและชั้นเรียน', 'ข้อมูลไม่ครบถ้วน', 'fa-solid fa-triangle-exclamation');
+
+  var newCode = 'CLS-' + Math.floor(100 + Math.random() * 900);
+  var studentList = [];
+
+  if (stuRaw) {
+    stuRaw.split(',').forEach(function(item, idx) {
+      var str = item.trim();
+      if (str) {
+        if (str.indexOf('@') !== -1) studentList.push({ id: 'STU-' + (800 + idx), name: str.split('@')[0], email: str });
+        else studentList.push({ id: str, name: 'Student ' + str, email: str.toLowerCase() + '@school.com' });
+      }
+    });
+  }
+
+  var newClass = {
+    id: 'cls-' + Date.now(),
+    title: title,
+    grade: grade,
+    code: newCode,
+    teacherName: state.currentUser ? state.currentUser.name : 'Teacher',
+    teacherContact: 'Line: @teacher | Tel: 081-999-8888',
+    students: studentList,
+    lessons: [],
+    assignments: [],
+    meetingRooms: []
+  };
+
+  state.classrooms.push(newClass);
+  state.activeClassId = newClass.id;
+  saveToLocalStorage();
+  closeModal('modal-create-classroom');
+  renderTeacherDashboard();
+  customAlert('สร้างห้องเรียนเรียบร้อยแล้ว! รหัสห้องเรียน: ' + newCode, 'สร้างสำเร็จ', 'fa-solid fa-circle-check');
+}
+
+function openAddStudentModal() { openModal('modal-add-student'); }
+
+function submitAddStudent() {
+  var val = document.getElementById('m-add-stu-input').value.trim();
+  if (!val) return customAlert('กรุณากรอก Student ID หรือ Email', 'ข้อมูลไม่ครบถ้วน', 'fa-solid fa-triangle-exclamation');
+
+  var activeClass = state.classrooms.find(function(c){ return c.id === state.activeClassId; });
+  if (!activeClass) return;
+
+  var newStu = (val.indexOf('@') !== -1) ? { id: 'STU-' + Math.floor(100 + Math.random() * 800), name: val.split('@')[0], email: val } : { id: val, name: 'Student ' + val, email: val.toLowerCase() + '@school.com' };
+
+  activeClass.students.push(newStu);
+  saveToLocalStorage();
+  closeModal('modal-add-student');
+  renderTeacherDashboard();
+  customAlert('เพิ่มนักเรียน ' + newStu.name + ' (' + newStu.id + ') เรียบร้อยแล้ว', 'สำเร็จ', 'fa-solid fa-user-check');
+}
+
+function openCreateLessonModal() { openModal('modal-create-lesson'); }
+
+function submitCreateLesson() {
+  var title = document.getElementById('build-lesson-title').value.trim();
+  if (!title) return customAlert('กรุณากรอกชื่อบทเรียน', 'ข้อมูลไม่ครบถ้วน', 'fa-solid fa-triangle-exclamation');
+
+  var activeClass = state.classrooms.find(function(c){ return c.id === state.activeClassId; });
+  if (!activeClass) return;
+
+  var defaultLesson = activeClass.lessons[0];
+  var newLesson = JSON.parse(JSON.stringify(defaultLesson));
+  newLesson.id = 'les-' + Date.now();
+  newLesson.title = title;
+
+  activeClass.lessons.push(newLesson);
+  saveToLocalStorage();
+  closeModal('modal-create-lesson');
+  renderTeacherDashboard();
+  customAlert('สร้างบทเรียน 6 Stages เรียบร้อยแล้ว!', 'สำเร็จ', 'fa-solid fa-flag-checkered');
+}
+
+function createAssignment() {
+  var title = document.getElementById('new-assign-title').value.trim();
+  var desc = document.getElementById('new-assign-desc').value.trim();
+  var dueDate = document.getElementById('new-assign-date').value.trim();
+
+  if (!title || !dueDate) return customAlert('กรุณากรอกหัวข้อและกำหนดส่งงาน', 'ข้อมูลไม่ครบถ้วน', 'fa-solid fa-triangle-exclamation');
+
+  var activeClass = state.classrooms.find(function(c){ return c.id === state.activeClassId; });
+  if (!activeClass) return;
+
+  activeClass.assignments.push({
+    id: 'asg-' + Date.now(),
+    title: title,
+    desc: desc,
+    dueDate: dueDate,
+    submissions: []
+  });
+
+  document.getElementById('new-assign-title').value = '';
+  document.getElementById('new-assign-desc').value = '';
+  document.getElementById('new-assign-date').value = '';
+
+  saveToLocalStorage();
+  renderTeacherDashboard();
+  customAlert('สั่งงานเรียบร้อยแล้ว!', 'สำเร็จ', 'fa-solid fa-thumbtack');
+}
+
+var targetParentStu = null;
+function openMessageParentModal(stuId, stuName) {
+  targetParentStu = { id: stuId, name: stuName };
+  document.getElementById('m-parent-stu-name').innerText = stuName;
+  document.getElementById('m-parent-stu-id').innerText = stuId;
+  openModal('modal-send-parent-msg');
+}
+
+function submitParentMessage() {
+  var title = document.getElementById('m-parent-title').value.trim();
+  var text = document.getElementById('m-parent-text').value.trim();
+
+  if (!title || !text) return customAlert('กรุณากรอกหัวข้อและรายละเอียดข้อความ', 'ข้อมูลไม่ครบถ้วน', 'fa-solid fa-triangle-exclamation');
+
+  state.parentMessages.push({
+    studentId: targetParentStu.id,
+    studentName: targetParentStu.name,
+    title: title,
+    text: text,
+    date: new Date().toISOString().split('T')[0],
+    teacherName: state.currentUser ? state.currentUser.name : 'ครูผู้สอน'
+  });
+
+  saveToLocalStorage();
+  closeModal('modal-send-parent-msg');
+  customAlert('ส่งข้อความถึงผู้ปกครองเรียบร้อยแล้ว!', 'ส่งสำเร็จ', 'fa-solid fa-paper-plane');
+}
+
+// STUDENT DASHBOARD
+function renderStudentDashboard() {
+  document.getElementById('stu-name-hero').innerText = state.currentUser ? state.currentUser.name : 'Student';
+
+  updateStudentTelemetry();
+
+  var container = document.getElementById('student-classroom-list');
+  container.innerHTML = '';
+
+  var myId = state.currentUser ? (state.currentUser.id || state.currentUser.studentId) : '';
+  var myClasses = state.classrooms.filter(function(c) {
+    return c.students.some(function(s){ return s.id === myId; });
+  });
+  if (myClasses.length === 0) myClasses = state.classrooms;
+
+  myClasses.forEach(function(cls) {
+    var div = document.createElement('div');
+    div.className = 'card card-yellow';
+    div.style.padding = '16px';
+    div.style.marginBottom = '0';
+    div.style.cursor = 'pointer';
+    div.onclick = function() { state.activeClassId = cls.id; switchView('student-hub'); };
+    div.innerHTML = '<div class="flex justify-between items-center"><div><span style="background:rgba(217, 119, 6, 0.15); color:#d97706; border:1px solid #d97706; padding:2px 8px; border-radius:6px; font-size:10px; font-weight:bold;">Track</span><h3 class="font-title" style="font-size:18px; margin-top:4px;">' + cls.title + '</h3><p style="font-size:11px; opacity:0.8;">' + cls.grade + ' • Teacher: ' + cls.teacherName + '</p></div><div style="font-size:18px; color:#d97706; background:rgba(217, 119, 6, 0.15); width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0;"><i class="fa-solid fa-route"></i></div></div>';
+    container.appendChild(div);
+  });
+
+  var assignContainer = document.getElementById('student-assignment-list');
+  assignContainer.innerHTML = '';
+
+  var allAssignments = [];
+  myClasses.forEach(function(cls) {
+    (cls.assignments || []).forEach(function(a) { allAssignments.push({ id: a.id, title: a.title, desc: a.desc, dueDate: a.dueDate, submissions: a.submissions, classTitle: cls.title }); });
+  });
+
+  if (allAssignments.length === 0) {
+    assignContainer.innerHTML = '<p style="color:#64748b;">No upcoming assignments.</p>';
+  } else {
+    allAssignments.forEach(function(asg) {
+      var isSubmitted = asg.submissions && asg.submissions.some(function(s){ return s.studentId === myId; });
+      var div = document.createElement('div');
+      div.style.background = 'var(--bg-main)';
+      div.style.padding = '10px 12px';
+      div.style.borderRadius = '12px';
+      div.style.border = '1px solid var(--border-color)';
+      var btnBg = isSubmitted ? '#22c55e' : 'var(--bg-card)';
+      var btnText = isSubmitted ? 'Submitted' : 'Submit';
+
+      div.innerHTML = '<div class="flex justify-between items-center"><div><strong style="font-size:12px;">' + asg.title + '</strong><div style="font-size:10px; opacity:0.8;">' + asg.classTitle + ' • Due ' + asg.dueDate + '</div></div><button class="btn-secondary" style="font-size:10px; padding:3px 8px; background:' + btnBg + ';" onclick="openSubmitAssignmentModal(\'' + asg.id + '\')">' + btnText + '</button></div>';
+      assignContainer.appendChild(div);
+    });
+  }
+}
+
+function renderStudentHub() {
+  var activeClass = state.classrooms.find(function(c){ return c.id === state.activeClassId; }) || state.classrooms[0];
+  document.getElementById('hub-class-title').innerText = activeClass.title + ' (' + activeClass.grade + ')';
+  document.getElementById('hub-class-code').innerText = activeClass.code;
+
+  var stuId = state.currentUser ? (state.currentUser.id || state.currentUser.studentId) : '';
+  var att = calculateStudentAttendance(stuId, activeClass);
+  document.getElementById('hub-attendance-badge').innerText = att.pct + '%';
+  document.getElementById('hub-attendance-status').innerText = att.isChecked ? 'เช็คชื่อเรียบร้อยแล้ว (สะสม >= 60%)' : 'ยังไม่ถึงเกณฑ์เช็คชื่อ (<60%)';
+
+  switchStudentHubTab('lessons');
+}
+
+function switchStudentHubTab(tab) {
+  ['lessons', 'assignments', 'meeting', 'people'].forEach(function(t) {
+    document.getElementById('stub-tab-' + t).classList.remove('active');
+    document.getElementById('hub-tc-' + t).classList.add('hidden');
+  });
+  document.getElementById('stub-tab-' + tab).classList.add('active');
+  document.getElementById('hub-tc-' + tab).classList.remove('hidden');
+
+  var activeClass = state.classrooms.find(function(c){ return c.id === state.activeClassId; }) || state.classrooms[0];
+
+  if (tab === 'lessons') renderHubLessons(activeClass);
+  else if (tab === 'assignments') renderHubAssignments(activeClass);
+  else if (tab === 'meeting') renderHubMeetingRooms(activeClass);
+  else if (tab === 'people') renderHubPeople(activeClass);
+}
+
+function renderHubLessons(cls) {
+  var container = document.getElementById('student-hub-lesson-list');
+  container.innerHTML = '';
+
+  if (!cls.lessons || cls.lessons.length === 0) {
+    container.innerHTML = '<p style="color:#64748b;">No lessons available yet.</p>';
+    return;
+  }
+
+  var stuId = state.currentUser ? (state.currentUser.id || state.currentUser.studentId) : '';
+  cls.lessons.forEach(function(les) {
+    var completedStages = state.studentProgress[stuId + '_' + les.id] || [];
+    var pct = Math.round((completedStages.length / 6) * 100);
+    var btnText = completedStages.length === 0 ? 'Start Race 🏎️' : 'Continue Race 🚀';
+
+    var div = document.createElement('div');
+    div.className = 'card';
+    div.style.padding = '16px';
+    div.style.marginBottom = '0';
+    div.innerHTML = '<div class="responsive-flex-card flex justify-between items-center"><div><h4 class="font-title" style="font-size: 16px; color: #d97706;">' + les.title + '</h4><div style="font-size: 11px; opacity: 0.8; margin-top: 2px;">Progress: <strong>' + completedStages.length + '/6 Stages Completed (' + pct + '%)</strong></div></div><button class="btn-primary" style="padding: 8px 16px; font-size: 12px;" onclick="startLessonRace(\'' + les.id + '\')">' + btnText + '</button></div>';
+    container.appendChild(div);
+  });
+}
+
+function renderHubAssignments(cls) {
+  var container = document.getElementById('student-hub-assignment-list');
+  container.innerHTML = '';
+
+  if (!cls.assignments || cls.assignments.length === 0) {
+    container.innerHTML = '<p style="color:#64748b;">No assignments posted yet.</p>';
+    return;
+  }
+
+  var stuId = state.currentUser ? (state.currentUser.id || state.currentUser.studentId) : '';
+  cls.assignments.forEach(function(asg) {
+    var sub = (asg.submissions || []).find(function(s){ return s.studentId === stuId; });
+    var div = document.createElement('div');
+    div.className = 'card';
+    div.style.padding = '16px';
+    div.style.marginBottom = '0';
+
+    var actionHtml = sub ? '<span style="background:rgba(34, 197, 94, 0.15); color:#16a34a; border:1px solid #22c55e; padding:4px 12px; border-radius:6px; font-size:11px; font-weight:bold;"><i class="fa-solid fa-check"></i> Submitted (' + sub.fileName + ')</span>'
+                         : '<button class="btn-primary" style="font-size:11px; padding:6px 12px;" onclick="openSubmitAssignmentModal(\'' + asg.id + '\')">Submit File</button>';
+
+    div.innerHTML = '<div class="responsive-flex-card flex justify-between items-center"><div><h4 class="font-title" style="font-size: 15px;">' + asg.title + '</h4><p style="font-size: 11px; opacity: 0.8; margin: 2px 0;">' + asg.desc + '</p><span style="font-size: 10px; color: #ff3b30; font-weight: bold;">Due Date: ' + asg.dueDate + '</span></div><div>' + actionHtml + '</div></div>';
+    container.appendChild(div);
+  });
+}
+
+function renderHubMeetingRooms(cls) {
+  var container = document.getElementById('student-meeting-room-list');
+  container.innerHTML = '';
+
+  if (!cls.meetingRooms || cls.meetingRooms.length === 0) {
+    container.innerHTML = '<p style="color:#64748b;">No meeting rooms created yet.</p>';
+    return;
+  }
+
+  cls.meetingRooms.forEach(function(room) {
+    var div = document.createElement('div');
+    div.style.background = 'var(--bg-card)';
+    div.style.border = '1.5px solid var(--border-color)';
+    div.style.borderRadius = '14px';
+    div.style.padding = '12px';
+    var lockText = room.isLocked ? '🔒 Private' : '🔓 Public';
+
+    div.innerHTML = '<div class="flex justify-between items-center" style="margin-bottom:4px;"><strong style="font-size:13px;">' + room.title + '</strong><span style="font-size:10px; opacity:0.8;">' + lockText + '</span></div><p style="font-size:10px; opacity:0.8; margin-bottom:8px;">Created by: ' + room.createdBy + '</p><button class="btn-secondary" style="width:100%; font-size:11px;" onclick="enterMeetingRoom(\'' + room.id + '\')">Enter Space</button>';
+    container.appendChild(div);
+  });
+}
+
+function renderHubPeople(cls) {
+  document.getElementById('hub-teacher-name').innerText = cls.teacherName;
+  document.getElementById('hub-teacher-contact').innerText = cls.teacherContact;
+
+  var container = document.getElementById('hub-classmate-list');
+  container.innerHTML = '';
+
+  if (!cls.students || cls.students.length === 0) {
+    container.innerHTML = '<p style="color:#64748b;">ยังไม่มีเพื่อนร่วมชั้นในระบบ</p>';
+    return;
+  }
+
+  var myId = state.currentUser ? (state.currentUser.id || state.currentUser.studentId) : '';
+  cls.students.forEach(function(s) {
+    var isMe = s.id === myId;
+    var div = document.createElement('div');
+    div.className = 'member-item';
+    div.innerHTML = '<div class="robot-avatar" style="width:28px; height:28px; font-size:12px;"><i class="fa-solid fa-robot"></i></div><div style="flex: 1;"><strong style="font-size:12px;">' + s.name + (isMe ? ' (Me)' : '') + '</strong></div><span style="font-size: 10px; opacity:0.8; font-weight: bold;">' + s.id + '</span>';
+    container.appendChild(div);
+  });
+}
+
+function openJoinClassModal() { openModal('modal-join-class'); }
+
+function submitJoinClass() {
+  var code = document.getElementById('m-join-code').value.trim().toUpperCase();
+  if (!code) return customAlert('กรุณากรอกรหัสห้องเรียน', 'ข้อมูลไม่ครบถ้วน', 'fa-solid fa-triangle-exclamation');
+
+  var cls = state.classrooms.find(function(c){ return c.code === code; });
+  if (!cls) return customAlert('ไม่พบห้องเรียนจากรหัสนี้ กรุณาตรวจสอบอีกครั้ง', 'รหัสไม่ถูกต้อง', 'fa-solid fa-circle-xmark');
+
+  var myId = state.currentUser ? (state.currentUser.id || state.currentUser.studentId) : 'STU-' + Math.floor(100 + Math.random()*900);
+  if (!cls.students.some(function(s){ return s.id === myId; })) {
+    cls.students.push({ id: myId, name: state.currentUser ? state.currentUser.name : 'Student', email: state.currentUser ? state.currentUser.email : 'student@school.com' });
+    saveToLocalStorage();
+  }
+
+  state.activeClassId = cls.id;
+  closeModal('modal-join-class');
+  switchView('student-hub');
+  customAlert('เข้าร่วมห้องเรียน ' + cls.title + ' เรียบร้อยแล้ว!', 'สำเร็จ', 'fa-solid fa-circle-check');
+}
+
+var activeTargetAssignId = null;
+function openSubmitAssignmentModal(asgId) {
+  activeTargetAssignId = asgId;
+  var activeClass = state.classrooms.find(function(c){ return c.id === state.activeClassId; }) || state.classrooms[0];
+  var asg = activeClass.assignments.find(function(a){ return a.id === asgId; });
+
+  if (asg) {
+    document.getElementById('m-submit-assign-title').innerText = asg.title;
+    document.getElementById('m-submit-assign-desc').innerText = asg.desc;
+    document.getElementById('m-submit-file-name').innerText = 'Click to attach file (PDF / DOCX)';
+    openModal('modal-submit-assignment');
+  }
+}
+
+function triggerSimulatedFileSelect() {
+  var fileName = 'assignment_submission_' + Math.floor(Math.random() * 1000) + '.pdf';
+  state.simulatedAttachedFile = fileName;
+  document.getElementById('m-submit-file-name').innerText = 'Attached: ' + fileName;
+}
+
+function submitAssignmentFile() {
+  if (!state.simulatedAttachedFile) return customAlert('กรุณาแนบไฟล์งานก่อนส่ง', 'ยังไม่ได้แนบไฟล์', 'fa-solid fa-triangle-exclamation');
+
+  var activeClass = state.classrooms.find(function(c){ return c.id === state.activeClassId; }) || state.classrooms[0];
+  var asg = activeClass.assignments.find(function(a){ return a.id === activeTargetAssignId; });
+
+  if (asg) {
+    if (!asg.submissions) asg.submissions = [];
+    var myId = state.currentUser ? (state.currentUser.id || state.currentUser.studentId) : '';
+    asg.submissions.push({
+      studentId: myId,
+      fileName: state.simulatedAttachedFile,
+      date: new Date().toISOString().replace('T', ' ').substring(0, 16)
+    });
+
+    saveToLocalStorage();
+    closeModal('modal-submit-assignment');
+    if (document.getElementById('view-student-hub').classList.contains('hidden')) renderStudentDashboard();
+    else renderStudentHub();
+    customAlert('ส่งงานเรียบร้อยแล้ว!', 'ส่งงานสำเร็จ', 'fa-solid fa-circle-check');
+  }
+}
+
+function openCreateMeetingRoomModal() { openModal('modal-create-meeting-room'); }
+
+function toggleRoomPinInput(val) {
+  if (val === 'locked') document.getElementById('m-room-pin-container').classList.remove('hidden');
+  else document.getElementById('m-room-pin-container').classList.add('hidden');
+}
+
+function submitCreateMeetingRoom() {
+  var title = document.getElementById('m-room-title').value.trim();
+  var lockVal = document.getElementById('m-room-lock-select').value;
+  var pin = document.getElementById('m-room-pin').value.trim();
+
+  if (!title) return customAlert('กรุณากรอกชื่อห้องคุยงาน', 'ข้อมูลไม่ครบถ้วน', 'fa-solid fa-triangle-exclamation');
+  if (lockVal === 'locked' && !pin) return customAlert('กรุณากำหนดรหัส PIN 4 หลัก', 'ข้อมูลไม่ครบถ้วน', 'fa-solid fa-triangle-exclamation');
+
+  var activeClass = state.classrooms.find(function(c){ return c.id === state.activeClassId; });
+  if (!activeClass) return;
+
+  activeClass.meetingRooms.push({
+    id: 'room-' + Date.now(),
+    title: title,
+    isLocked: lockVal === 'locked',
+    pin: pin,
+    createdBy: state.currentUser ? state.currentUser.name : 'User',
+    messages: [
+      { sender: 'System', text: 'Room "' + title + '" created. Start collaborating!', time: 'Now', file: null }
+    ]
+  });
+
+  saveToLocalStorage();
+  closeModal('modal-create-meeting-room');
+  renderHubMeetingRooms(activeClass);
+}
+
+function enterMeetingRoom(roomId) {
+  var activeClass = state.classrooms.find(function(c){ return c.id === state.activeClassId; });
+  var room = activeClass.meetingRooms.find(function(r){ return r.id === roomId; });
+
+  if (room.isLocked) {
+    var pin = prompt('Room is PIN locked. Enter 4-digit PIN:');
+    if (pin !== room.pin) return customAlert('รหัส PIN ไม่ถูกต้อง!', 'เข้าห้องไม่สำเร็จ', 'fa-solid fa-lock');
+  }
+
+  state.activeMeetingRoomId = roomId;
+  renderChatBox();
+  openModal('modal-meeting-room-chat');
+}
+
+function renderChatBox() {
+  var activeClass = state.classrooms.find(function(c){ return c.id === state.activeClassId; });
+  var room = activeClass.meetingRooms.find(function(r){ return r.id === state.activeMeetingRoomId; });
+
+  document.getElementById('m-chat-room-title').innerText = room.title;
+  document.getElementById('m-chat-room-status').innerText = (room.isLocked ? '🔒 Locked' : '🔓 Unlocked') + ' • Created by ' + room.createdBy;
+
+  var btnToggle = document.getElementById('btn-toggle-chat-lock');
+  btnToggle.innerText = room.isLocked ? 'Unlock Room' : 'Lock Room';
+
+  var box = document.getElementById('m-chat-box');
+  box.innerHTML = '';
+
+  room.messages.forEach(function(msg) {
+    var isMine = state.currentUser && msg.sender === state.currentUser.name;
+    var div = document.createElement('div');
+    div.className = 'chat-bubble ' + (isMine ? 'mine' : 'other');
+    var fileHtml = msg.file ? '<div style="margin-top:3px; font-weight:bold; font-size:11px;"><i class="fa-solid fa-paperclip"></i> ' + msg.file + '</div>' : '';
+
+    div.innerHTML = '<span style="font-size:10px; opacity:0.8; font-weight:bold; display:block;">' + msg.sender + ' • ' + msg.time + '</span><div>' + msg.text + '</div>' + fileHtml;
+    box.appendChild(div);
+  });
+
+  box.scrollTop = box.scrollHeight;
+}
+
+function toggleCurrentChatLock() {
+  var activeClass = state.classrooms.find(function(c){ return c.id === state.activeClassId; });
+  var room = activeClass.meetingRooms.find(function(r){ return r.id === state.activeMeetingRoomId; });
+
+  if (room.isLocked) {
+    room.isLocked = false;
+    customAlert('ปลดล็อกห้องคุยงานเรียบร้อยแล้ว', 'สถานะห้อง', 'fa-solid fa-lock-open');
+  } else {
+    var pin = prompt('Set 4-digit PIN to lock room:');
+    if (pin) {
+      room.isLocked = true;
+      room.pin = pin;
+      customAlert('ล็อกห้องด้วยรหัส PIN เรียบร้อยแล้ว', 'สถานะห้อง', 'fa-solid fa-lock');
+    }
+  }
+  saveToLocalStorage();
+  renderChatBox();
+}
+
+var activeChatFile = null;
+function triggerChatFileUpload() {
+  activeChatFile = 'shared_doc_' + Math.floor(Math.random() * 100) + '.pdf';
+  document.getElementById('chat-attached-file-name').innerText = activeChatFile;
+  document.getElementById('chat-attached-file-preview').classList.remove('hidden');
+}
+
+function removeChatAttachedFile() {
+  activeChatFile = null;
+  document.getElementById('chat-attached-file-preview').classList.add('hidden');
+}
+
+function sendChatMessage() {
+  var input = document.getElementById('m-chat-input');
+  var text = input.value.trim();
+
+  if (!text && !activeChatFile) return;
+
+  var activeClass = state.classrooms.find(function(c){ return c.id === state.activeClassId; });
+  var room = activeClass.meetingRooms.find(function(r){ return r.id === state.activeMeetingRoomId; });
+
+  room.messages.push({
+    sender: state.currentUser ? state.currentUser.name : 'Student',
+    text: text || 'Shared file:',
+    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    file: activeChatFile
+  });
+
+  input.value = '';
+  removeChatAttachedFile();
+  saveToLocalStorage();
+  renderChatBox();
+}
+
+// LESSON RACES
+function startLessonRace(lesId) {
+  state.activeLessonId = lesId;
+  state.activeStageIdx = 0;
+  currentMcqIdx = 0; currentFillIdx = 0; currentBuilderIdx = 0;
+  playEngineRev();
+  switchView('lesson');
+}
+
+function previewLesson(lesId) {
+  state.activeLessonId = lesId;
+  state.activeStageIdx = 0;
+  currentMcqIdx = 0; currentFillIdx = 0; currentBuilderIdx = 0;
+  playEngineRev();
+  switchView('lesson');
+}
+
+function renderLessonView() {
+  var activeClass = state.classrooms.find(function(c){ return c.id === state.activeClassId; }) || state.classrooms[0];
+  var les = activeClass.lessons.find(function(l){ return l.id === state.activeLessonId; }) || activeClass.lessons[0];
+
+  document.getElementById('current-active-lesson-title').innerText = les.title;
+  document.getElementById('current-active-lesson-sub').innerText = activeClass.title + ' (' + activeClass.grade + ')';
+
+  renderRacetrackMap();
+  goToStage(state.activeStageIdx);
+}
+
+function renderRacetrackMap() {
+  var activeClass = state.classrooms.find(function(c){ return c.id === state.activeClassId; }) || state.classrooms[0];
+  var les = activeClass.lessons.find(function(l){ return l.id === state.activeLessonId; }) || activeClass.lessons[0];
+  var myId = state.currentUser ? (state.currentUser.id || state.currentUser.studentId) : '';
+  var completed = state.studentProgress[myId + '_' + les.id] || [];
+
+  var grid = document.getElementById('racetrack-cards-grid');
+  grid.innerHTML = '';
+
+  STAGE_METADATA.forEach(function(meta, idx) {
+    var isDone = completed.includes(idx);
+    var isCurrent = idx === state.activeStageIdx;
+    
+    var isUnlocked = true;
+    for (var k = 0; k < idx; k++) {
+      if (!completed.includes(k)) { isUnlocked = false; break; }
+    }
+
+    var cardDiv = document.createElement('div');
+    var statusClass = isDone ? 'done' : (isCurrent ? 'current' : (!isUnlocked ? 'locked' : ''));
+    cardDiv.className = 'track-card ' + statusClass;
+    cardDiv.onclick = function() { goToStage(idx); };
+
+    var numIcon = isDone ? '<i class="fa-solid fa-check"></i>' : (idx + 1);
+    var carPinHtml = isCurrent ? '<div class="car-pin" title="Current Position"><i class="fa-solid fa-car-side"></i></div>' : '';
+
+    cardDiv.innerHTML = carPinHtml +
+      '<div class="track-card-header">' +
+        '<span class="category-tag">' + meta.category + '</span>' +
+        '<span class="xp-pill">' + meta.xp + '</span>' +
+      '</div>' +
+      '<div class="track-card-body">' +
+        '<div class="stage-num-badge">' + numIcon + '</div>' +
+        '<div>' +
+          '<h4 style="font-size:13px; font-weight:bold;">' + meta.title + '</h4>' +
+          '<p style="font-size:10px; opacity:0.8; margin-top:2px; line-height:1.3;">' + meta.sub + '</p>' +
+        '</div>' +
+      '</div>';
+
+    grid.appendChild(cardDiv);
+  });
+}
+
+function goToStage(stageIdx) {
+  var activeClass = state.classrooms.find(function(c){ return c.id === state.activeClassId; }) || state.classrooms[0];
+  var les = activeClass.lessons.find(function(l){ return l.id === state.activeLessonId; }) || activeClass.lessons[0];
+  var myId = state.currentUser ? (state.currentUser.id || state.currentUser.studentId) : '';
+  var completed = state.studentProgress[myId + '_' + les.id] || [];
+
+  for (var k = 0; k < stageIdx; k++) {
+    if (!completed.includes(k)) {
+      playWrongSound();
+      customAlert('Stage ' + (stageIdx + 1) + ' ถูกล็อกอยู่!\n\nคุณต้องเรียนและทำ Stage ' + (k + 1) + ' ให้เสร็จสิ้นก่อนครับ', 'ด่านยังล็อกอยู่ 🔒', 'fa-solid fa-lock');
+      return;
+    }
+  }
+
+  if (videoTimerInterval) clearInterval(videoTimerInterval);
+
+  state.activeStageIdx = stageIdx;
+  renderRacetrackMap();
+
+  for (var i = 0; i < 6; i++) {
+    document.getElementById('stage-' + i).classList.add('hidden');
+  }
+  document.getElementById('stage-' + stageIdx).classList.remove('hidden');
+
+  // STAGE 0: VIDEO TIMER & UNLOCK
+  if (stageIdx === 0) {
+    document.getElementById('lesson-video-frame').src = les.videoUrl || 'https://drive.google.com/file/d/1Aua7V_GtRPUOLcllRZEf5cyFDa8XCVYd/preview';
+    var btn = document.getElementById('btn-video-done');
+    if (completed.includes(0)) {
+      btn.disabled = false;
+      btn.innerText = "I've Watched Video 🏁 (กดเพื่อเข้า Stage 2)";
+    } else {
+      btn.disabled = true;
+      var timeLeft = 300;
+      btn.innerText = "กำลังรับชมวิดีโอ... (" + timeLeft + " วินาที)";
+videoTimerInterval = setInterval(function() {
+  timeLeft--;
+  var min = Math.floor(timeLeft / 60);
+  var sec = timeLeft % 60;
+  if (timeLeft > 0) {
+    btn.innerText = "กำลังรับชมวิดีโอ... (" + min + " นาที " + sec + " วินาที)";
+  } else {
+    clearInterval(videoTimerInterval);
+    btn.disabled = false;
+    btn.innerText = "I've Watched Video 🏁 (กดเพื่อผ่าน Stage 1)";
+  }
+}, 1000);
+    }
+  } else if (stageIdx === 1) {
+    renderReadingPassage(les);
+  } else if (stageIdx === 2) {
+    currentMcqIdx = 0;
+    renderMCQ(les);
+  } else if (stageIdx === 3) {
+    renderMatchingGame(les);
+  } else if (stageIdx === 4) {
+    currentFillIdx = 0;
+    renderFillBlank(les);
+  } else if (stageIdx === 5) {
+    currentBuilderIdx = 0;
+    renderWordBuilder(les);
+  }
+}
+
+function passStage(stageIdx) {
+  var activeClass = state.classrooms.find(function(c){ return c.id === state.activeClassId; }) || state.classrooms[0];
+  var les = activeClass.lessons.find(function(l){ return l.id === state.activeLessonId; }) || activeClass.lessons[0];
+  var myId = state.currentUser ? (state.currentUser.id || state.currentUser.studentId) : '';
+  var key = myId + '_' + les.id;
+
+  if (!state.studentProgress[key]) state.studentProgress[key] = [];
+
+  var prevAtt = calculateStudentAttendance(myId, activeClass);
+
+  if (!state.studentProgress[key].includes(stageIdx)) {
+    state.studentProgress[key].push(stageIdx);
+  }
+
+  saveToLocalStorage();
+  playCorrectSound();
+  updateStudentTelemetry();
+
+  var newAtt = calculateStudentAttendance(myId, activeClass);
+
+  if (!prevAtt.isChecked && newAtt.isChecked) {
+    customAlert('🎉 ยินดีด้วยครับ! คุณสะสมความก้าวหน้าการเรียนครบ ' + newAtt.pct + '% (เกินเกณฑ์ 60%) แล้ว ระบบได้ทำการ "เช็คชื่อเข้าเรียน" ให้อัตโนมัติเรียบร้อยครับ!', 'เช็คชื่อสำเร็จแล้ว ✅', 'fa-solid fa-circle-check');
+  }
+
+  if (stageIdx < 5) {
+    goToStage(stageIdx + 1);
+  } else {
+    customAlert('ยินดีด้วย! คุณเรียนจบครบทั้ง 6 Stages ในบทเรียนนี้แล้ว 🎉', 'Final Lap Completed!', 'fa-solid fa-trophy');
+    switchView('student-hub');
+  }
+}
+
+function renderReadingPassage(les) {
+  var content = les.readingContent;
+  var map = les.vocabMap || {};
+
+  Object.keys(map).forEach(function(w) {
+    var regex = new RegExp('\\b(' + w + ')\\b', 'gi');
+    content = content.replace(regex, '<span class="vocab-word" onclick="openVocabModal(\'$1\', \'' + map[w] + '\')">$1</span>');
+  });
+
+  document.getElementById('lesson-reading-content').innerHTML = content.replace(/\n/g, '<br><br>');
+}
+
+function openVocabModal(word, meaning) {
+  playEngineRev();
+  document.getElementById('vocab-modal-word').innerText = word;
+  document.getElementById('vocab-modal-meaning').innerText = meaning;
+  openModal('modal-vocab-meaning');
+}
+
+function renderMCQ(les) {
+  var mcqList = les.mcqList || [les.mcq];
+  var mcq = mcqList[currentMcqIdx];
+
+  document.getElementById('mcq-step-tag').innerText = 'Question ' + (currentMcqIdx + 1) + '/' + mcqList.length;
+  document.getElementById('mcq-question').innerText = mcq.q;
+
+  var container = document.getElementById('mcq-options');
+  container.innerHTML = '';
+
+  mcq.opts.forEach(function(opt, idx) {
+    var btn = document.createElement('button');
+    btn.className = 'btn-secondary';
+    btn.style.textAlign = 'left';
+    btn.innerText = opt;
+    btn.onclick = function() {
+      if (idx === mcq.ans) {
+        btn.classList.add('correct');
+        playCorrectSound();
+        setTimeout(function() {
+          currentMcqIdx++;
+          if (currentMcqIdx < mcqList.length) renderMCQ(les);
+          else passStage(2);
+        }, 600);
+      } else {
+        btn.classList.add('wrong');
+        playWrongSound();
+      }
+    };
+    container.appendChild(btn);
+  });
+}
+
+function renderMatchingGame(les) {
+  var wordsCol = document.getElementById('match-words');
+  var meanCol = document.getElementById('match-meanings');
+  wordsCol.innerHTML = ''; meanCol.innerHTML = '';
+
+  state.selectedMatchWord = null;
+  var matches = les.match || [];
+
+  matches.forEach(function(m) {
+    var btnW = document.createElement('button');
+    btnW.className = 'match-btn';
+    btnW.innerText = m.w;
+    btnW.onclick = function() {
+      var allBtns = document.querySelectorAll('#match-words .match-btn');
+      for (var i = 0; i < allBtns.length; i++) { allBtns[i].classList.remove('selected'); }
+      btnW.classList.add('selected');
+      state.selectedMatchWord = m;
+    };
+    wordsCol.appendChild(btnW);
+
+    var btnM = document.createElement('button');
+    btnM.className = 'match-btn';
+    btnM.innerText = m.m;
+    btnM.onclick = function() {
+      if (!state.selectedMatchWord) return;
+      if (state.selectedMatchWord.m === m.m) {
+        btnM.classList.add('matched');
+        playCorrectSound();
+        var selBtn = document.querySelector('#match-words .match-btn.selected');
+        if (selBtn) selBtn.classList.add('matched');
+        state.selectedMatchWord = null;
+
+        if (document.querySelectorAll('.match-btn.matched').length === matches.length * 2) {
+          setTimeout(function() { passStage(3); }, 600);
+        }
+      } else {
+        btnM.classList.add('wrong');
+        playWrongSound();
+        setTimeout(function() { btnM.classList.remove('wrong'); }, 500);
+      }
+    };
+    meanCol.appendChild(btnM);
+  });
+}
+
+function renderFillBlank(les) {
+  var fillList = les.fillList || [les.fill];
+  var fill = fillList[currentFillIdx];
+
+  document.getElementById('fill-step-tag').innerText = 'Task ' + (currentFillIdx + 1) + '/' + fillList.length;
+  document.getElementById('fill-sentence').innerText = fill.sentence;
+
+  var container = document.getElementById('fill-options');
+  container.innerHTML = '';
+
+  fill.opts.forEach(function(opt) {
+    var btn = document.createElement('button');
+    btn.className = 'btn-secondary';
+    btn.innerText = opt;
+    btn.onclick = function() {
+      if (opt === fill.ans) {
+        btn.classList.add('correct');
+        playCorrectSound();
+        setTimeout(function() {
+          currentFillIdx++;
+          if (currentFillIdx < fillList.length) renderFillBlank(les);
+          else passStage(4);
+        }, 600);
+      } else {
+        btn.classList.add('wrong');
+        playWrongSound();
+      }
+    };
+    container.appendChild(btn);
+  });
+}
+
+function renderWordBuilder(les) {
+  var builderList = les.builderList || [les.builder];
+  var builder = builderList[currentBuilderIdx];
+
+  document.getElementById('builder-step-tag').innerText = 'Round ' + (currentBuilderIdx + 1) + '/' + builderList.length;
+  document.getElementById('builder-prompt').innerText = builder.prompt;
+
+  state.builderCurrentParts = [];
+  updateBuilderArea();
+
+  var partsCol = document.getElementById('builder-parts');
+  partsCol.innerHTML = '';
+
+  builder.parts.forEach(function(p) {
+    var btn = document.createElement('button');
+    btn.className = 'btn-secondary';
+    btn.innerText = p;
+    btn.onclick = function() {
+      state.builderCurrentParts.push(p);
+      btn.disabled = true;
+      updateBuilderArea();
+    };
+    partsCol.appendChild(btn);
+  });
+}
+
+function updateBuilderArea() {
+  document.getElementById('build-area').innerText = state.builderCurrentParts.join('');
+}
+
+function resetBuilder() {
+  var activeClass = state.classrooms.find(function(c){ return c.id === state.activeClassId; }) || state.classrooms[0];
+  var les = activeClass.lessons.find(function(l){ return l.id === state.activeLessonId; }) || activeClass.lessons[0];
+  renderWordBuilder(les);
+}
+
+function checkBuilder() {
+  var activeClass = state.classrooms.find(function(c){ return c.id === state.activeClassId; }) || state.classrooms[0];
+  var les = activeClass.lessons.find(function(l){ return l.id === state.activeLessonId; }) || activeClass.lessons[0];
+  var builderList = les.builderList || [les.builder];
+  var builder = builderList[currentBuilderIdx];
+
+  var builtWord = state.builderCurrentParts.join('').toUpperCase();
+
+  if (builtWord === builder.target.toUpperCase()) {
+    playCorrectSound();
+    customAlert('ประกอบคำถูกต้องแล้ว!', 'Perfect Assembly!', 'fa-solid fa-wand-magic-sparkles');
+    currentBuilderIdx++;
+    if (currentBuilderIdx < builderList.length) renderWordBuilder(les);
+    else passStage(5);
+  } else {
+    playWrongSound();
+    customAlert('คำที่ประกอบยังไม่ถูกต้อง! กรุณาลองใหม่อีกครั้ง', 'ยังไม่ถูกต้อง', 'fa-solid fa-circle-xmark');
+    resetBuilder();
+  }
+}
+
+function calculateStudentAttendance(stuId, cls) {
+  if (!cls.lessons || cls.lessons.length === 0) return { pct: 0, isChecked: false };
+
+  var totalStages = cls.lessons.length * 6;
+  var completedStages = 0;
+
+  cls.lessons.forEach(function(les) {
+    var done = state.studentProgress[stuId + '_' + les.id] || [];
+    completedStages += done.length;
+  });
+
+  var pct = Math.round((completedStages / totalStages) * 100);
+  var isChecked = pct >= 60;
+
+  return { pct: pct, isChecked: isChecked };
+}
+
+// PARENT DASHBOARD
+function renderParentDashboard() {
+  var inputVal = document.getElementById('parent-student-id').value.trim();
+  if (inputVal) {
+    linkParent();
+  }
+}
+
+function linkParent() {
+  var stuId = document.getElementById('parent-student-id').value.trim();
+  if (!stuId) return customAlert('กรุณากรอก Student ID', 'ข้อมูลไม่ครบถ้วน', 'fa-solid fa-triangle-exclamation');
+
+  var activeClass = state.classrooms[0];
+  var stu = activeClass.students.find(function(s){ return s.id === stuId; }) || { id: stuId, name: 'นักเรียน ' + stuId };
+
+  document.getElementById('parent-unlinked').classList.add('hidden');
+  document.getElementById('parent-linked').classList.remove('hidden');
+
+  document.getElementById('p-child-name').innerText = stu.name;
+  document.getElementById('linked-stu-id').innerText = stu.id;
+
+  var att = calculateStudentAttendance(stu.id, activeClass);
+  document.getElementById('p-child-att-pct').innerText = att.pct + '%';
+  document.getElementById('p-child-att-badge').innerText = att.isChecked ? 'ผ่านเกณฑ์ (เช็คชื่อเรียบร้อย)' : 'ยังไม่ผ่านเกณฑ์เช็คชื่อ (<60%)';
+
+  var pendingCount = (activeClass.assignments || []).filter(function(a) {
+    return !(a.submissions || []).some(function(s){ return s.studentId === stu.id; });
+  }).length;
+  document.getElementById('parent-assign-count').innerText = pendingCount;
+
+  var inbox = document.getElementById('parent-inbox-list');
+  inbox.innerHTML = '';
+
+  var msgs = state.parentMessages.filter(function(m){ return m.studentId === stu.id; });
+  if (msgs.length === 0) {
+    inbox.innerHTML = '<p style="color:#0284c7;">ไม่มีข้อความใหม่จากครู</p>';
+  } else {
+    msgs.forEach(function(m) {
+      var div = document.createElement('div');
+      div.style.background = 'var(--bg-main)';
+      div.style.padding = '10px';
+      div.style.borderRadius = '10px';
+      div.style.border = '1px solid rgba(2, 132, 199, 0.2)';
+      div.innerHTML = '<div class="flex justify-between items-center" style="margin-bottom:4px;"><strong style="color:#0284c7;">' + m.title + '</strong><span style="font-size:10px; opacity:0.8;">' + m.date + '</span></div><p style="font-size:11px; opacity:0.9; margin-bottom:4px;">' + m.text + '</p><span style="font-size:10px; opacity:0.8; font-weight:bold;">ส่งโดย: ' + m.teacherName + '</span>';
+      inbox.appendChild(div);
+    });
+  }
+
+  document.getElementById('p-teacher-name').innerText = activeClass.teacherName;
+  document.getElementById('p-teacher-contact').innerText = activeClass.teacherContact;
+}
+
+function unlinkParent() {
+  document.getElementById('parent-unlinked').classList.remove('hidden');
+  document.getElementById('parent-linked').classList.add('hidden');
+}
+
+function openModal(id) { document.getElementById(id).classList.add('show'); }
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+</script>
+</body>
+</html>
